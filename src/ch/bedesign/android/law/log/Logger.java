@@ -71,7 +71,7 @@ public class Logger {
 
 	public static void logStacktrace(String msg, Throwable e) {
 		if (!Logger.DEBUG) {
-			logToFile(msg, new Exception());
+			logToFile(msg, e);
 		}
 	}
 
