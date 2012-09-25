@@ -101,8 +101,10 @@ public class WebParser {
 	//-InputStream in String convertieren 
 	private String convertStreamToString(InputStream is) {
 
+		BufferedReader reader = null;
+		try {
 		//-BufferReader mit InputStream erstellen 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		 reader = new BufferedReader(new InputStreamReader(is));
 
 		//-StringBuilder erstellen 
 		StringBuilder sb = new StringBuilder();
@@ -113,8 +115,6 @@ public class WebParser {
 		String cleanLineText = null;
 		String cleanLineID = null;
 		String cleanLineLink = null;
-
-		try {
 
 			//-While-Schleife ausführen, bis man in der letzten Zeile des BufferReader angekommen ist 
 			while ((line = reader.readLine()) != null) {
@@ -133,24 +133,29 @@ public class WebParser {
 			}
 
 			//-Exception abfangen     
+			//-String zurückgeben 
+			return sbDetail.toString();
 		} catch (IOException e) {
 			Logger.e("error parsing", e);
 			//	e.printStackTrace();
 
 		} finally {
 			try {
-				is.close();
+				if (is == null) {
+					is.close();
+				}
+				if (reader == null) {
+					reader.close();
+				}
 
 				//-Exception abfangen        
 			} catch (IOException e) {
-
-				e.printStackTrace();
+				// interssiert niemand
+				//e.printStackTrace();
 
 			}
 		}
-
-		//-String zurückgeben 
-		return sbDetail.toString();
+		return null;
 	}
 
 }
