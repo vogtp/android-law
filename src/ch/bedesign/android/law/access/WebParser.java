@@ -13,6 +13,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import ch.bedesign.android.law.log.Logger;
+
 public class WebParser {
 
 	class LineInfo {
@@ -132,8 +134,8 @@ public class WebParser {
 
 			//-Exception abfangen     
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			Logger.e("error parsing", e);
+			//	e.printStackTrace();
 
 		} finally {
 			try {
