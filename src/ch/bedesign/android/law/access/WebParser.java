@@ -25,7 +25,7 @@ public class WebParser {
 		
 	}
 	
-	//TODO  Class HTML ansehen! evt relevant für Parser
+	//TODO  Class HTML ansehen! evt relevant fï¿½r Parser
 	
 	class LineInfo {
 		private String id; //type long?
