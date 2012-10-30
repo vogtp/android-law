@@ -141,6 +141,8 @@ public interface DB {
 		static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY + "." + CONTENT_ITEM_NAME;
 		public static final UriTableMapping URI_TABLE_MAPPING = new UriTableMapping(CONTENT_URI, TABLE_NAME, CONTENT_ITEM_NAME, CONTENT_TYPE, CONTENT_ITEM_TYPE);
 
+		static final String SELECTION_CODE = NAME_CODE + "=?";
+
 	}
 
 	public interface Entries {

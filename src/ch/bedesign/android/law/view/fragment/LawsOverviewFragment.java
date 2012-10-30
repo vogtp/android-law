@@ -43,17 +43,16 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		}
 	}
 
-	@Override
 	public String getName() {
 		return "Gesetze";
 	}
 
-	@Override
+	
 	public Loader<Cursor> onCreateLoader(int loader, Bundle bundle) {
 		return new CursorLoader(getActivity(), DB.Laws.CONTENT_URI, DB.Laws.PROJECTION_DEFAULT, null, null, DB.Laws.SORTORDER_DEFAULT);
 	}
 
-	@Override
+	
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		adapter.swapCursor(c);
 
@@ -65,12 +64,12 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		}
 	}
 
-	@Override
+	
 	public void onLoaderReset(Loader<Cursor> loader) {
 		adapter.swapCursor(null);
 	}
 
-	@Override
+	
 	public boolean onBackPressed() {
 		return false;
 	}
