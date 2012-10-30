@@ -10,8 +10,12 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.access.LawUpdater.LawUpdateCallback;
 import ch.bedesign.android.law.db.DB;
@@ -45,6 +49,24 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
 				new String[] { DB.Entries.NAME_FULL_NAME, DB.Entries.NAME_TEXT },
 				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
+		ViewBinder binder = new ViewBinder() {
+
+			public boolean setViewValue(View view, Cursor cursor, int idx) {
+				if (DB.Entries.INDEX_TEXT == idx) {
+					if (view instanceof TextView) {
+						String string = cursor.getString(idx);
+						if (string != null) {
+							Spanned fromHtml = Html.fromHtml(string);
+							((TextView) view).setText(fromHtml);
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+
+		};
+		adapter.setViewBinder(binder);
 		setListAdapter(adapter);
 	}
 
@@ -56,18 +78,15 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		getLoaderManager().restartLoader(0, null, this);
 	}
 
-	@Override
 	public String getName() {
 		return lawModel.getName();
 	}
 
-	@Override
 	public Loader<Cursor> onCreateLoader(int loader, Bundle bundle) {
 		String[] args = new String[] { Long.toString(lawModel.getId()), Long.toString(parentId) };
 		return new CursorLoader(getActivity(), DB.Entries.CONTENT_URI, DB.Entries.PROJECTION_DEFAULT, DB.Entries.SELECTION_LAW_PARENT, args, DB.Entries.SORTORDER_DEFAULT);
 	}
 
-	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		if (c == null || c.getCount() < 1) {
 			parentId = getLastParent();
@@ -91,17 +110,14 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		return parents.pop();
 	}
 
-	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		adapter.swapCursor(null);
 	}
 
-	@Override
 	public Context getContext() {
 		return getActivity().getApplicationContext();
 	}
 
-	@Override
 	public boolean onBackPressed() {
 		if (parentId == -1) {
 			return false;
