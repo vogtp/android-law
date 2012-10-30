@@ -16,6 +16,7 @@ import android.text.Spanned;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.access.LawUpdater.LawUpdateCallback;
 import ch.bedesign.android.law.db.DB;
@@ -46,9 +47,9 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		//		lawId = args.getLong(ARG_LAW_ID);
 		LawUpdater.loadLaw(this, lawModel);
 
-		adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
+		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_display_list_item, null,
 				new String[] { DB.Entries.NAME_FULL_NAME, DB.Entries.NAME_TEXT },
-				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
+				new int[] { R.id.tvLawTitle, R.id.tvLawText }, 0);
 		ViewBinder binder = new ViewBinder() {
 
 			public boolean setViewValue(View view, Cursor cursor, int idx) {
