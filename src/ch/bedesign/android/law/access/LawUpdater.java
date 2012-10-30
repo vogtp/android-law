@@ -66,11 +66,14 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 
 	private void updateLaw(LawModel law) throws ClientProtocolException, IOException {
 
+		WebParser lawData = new WebParser();
 		try {
-			long lastUpdate = Long.parseLong(law.getVersion());
-			if (System.currentTimeMillis() < lastUpdate + UPDATE_INTERVALL_MILLIES) {
-				//FIXME get the information from law
+			if (System.currentTimeMillis() < law.getLastCheck() + UPDATE_INTERVALL_MILLIES) {
 				Logger.i("Not updating since the law is too new");
+				return;
+			}
+			if (law.getVersion() != null && law.getVersion().equals(lawData.getLawVersion())) {
+				Logger.i("Not updating since the law it has not changed");
 				return;
 			}
 		} catch (Exception e) {
@@ -79,7 +82,6 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 
 		ContentResolver resolver = callback.getContext().getContentResolver();
 		long lawId = law.getId();
-		WebParser lawData = new WebParser();
 		lawData.getText(law.getUrl());
 		resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
 		int i = 0;
@@ -113,7 +115,9 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 			i++;
 		}
 
-		law.setVersion(Long.toString(System.currentTimeMillis()));
+		//FIXME only update if update successful
+		law.setLastCheck(System.currentTimeMillis());
+		law.setVersion(lawData.getLawVersion());
 		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
 
 	}
