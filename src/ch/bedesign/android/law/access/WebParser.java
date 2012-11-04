@@ -286,4 +286,9 @@ public class WebParser {
 		return null;
 	}
 
+	public String getLawVersion() {
+		// FIXME Muriel: get the version of the law
+		return null;
+	}
+
 }

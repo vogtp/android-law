@@ -208,4 +208,9 @@ public class parser {
 		}
 		return null;
 	}
+
+	public String getLawVersion() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
