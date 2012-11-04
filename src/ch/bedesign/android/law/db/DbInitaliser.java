@@ -9,8 +9,10 @@ import ch.bedesign.android.law.model.LawModel;
 
 public class DbInitaliser {
 
-	public static final String CODE_VERFASSUNG = "SR 101";
+	public static final String CODE_VERFASSUNG = "101";
 	public static final String CODE_OR = "220";
+	public static final String CODE_ZGB = "210";
+	public static final String CODE_STGB = "311_0";
 
 	public static final void initDb(Context ctx) {
 		ContentResolver resolver = ctx.getContentResolver();
@@ -27,6 +29,16 @@ public class DbInitaliser {
 		if (hasThisLaw(resolver, CODE_OR)) {
 			LawModel or = new LawModel(CODE_OR, "Obligationenrecht", CountryModel.CH_de.getId(),
 					"30. März 1911 (Stand am 1. März 2012)", "http://www.admin.ch/ch/d/sr/220/index.html", -1);
+			resolver.insert(Laws.CONTENT_URI, or.getValues());
+		}
+		if (hasThisLaw(resolver, CODE_ZGB)) {
+			LawModel or = new LawModel(CODE_ZGB, "Schweizerisches Zivilgesetzbuch", CountryModel.CH_de.getId(),
+					"10. Dezember 1907 (Stand am 1. Januar 2012)", "http://www.admin.ch/ch/d/sr/210/index.html", -1);
+			resolver.insert(Laws.CONTENT_URI, or.getValues());
+		}
+		if (hasThisLaw(resolver, CODE_STGB)) {
+			LawModel or = new LawModel(CODE_STGB, "Schweizerisches Strafgesetzbuch", CountryModel.CH_de.getId(),
+					"21. Dezember 1937 (Stand am 1. Oktober 2012)", "http://www.admin.ch/ch/d/sr/311_0/index.html", -1);
 			resolver.insert(Laws.CONTENT_URI, or.getValues());
 		}
 		

@@ -20,12 +20,10 @@ public class WebParser {
 	public static void main(String args[]){
 		
 		WebParser r = new WebParser();
-		r.getNewLaw(220);
-		
 		
 	}
 	
-	//TODO  Class HTML ansehen! evt relevant f�r Parser
+	//TODO  Class HTML ansehen! evt relevant f�r Parser
 	
 	class LineInfo {
 		private String id; //type long?
@@ -88,19 +86,7 @@ public class WebParser {
 			String s = "";
 			
 			while(i < result.data.size()){
-				/*
-				 * s = s + result.data.get(i).getId() + ", " + result.data.get(i).getLink() + ", " + result.data.get(i).getText()+"\n" ;
-				
-				url = FixUrlGerman+SrNr+ "/" + result.data.get(i).getLink();
-				WebParser secondResult = new WebParser();
-				secondResult.getText(url);
-				int t = 0;
-				String s2= "";
-				while(t < secondResult.data.size()){
-					s2 = s2 + secondResult.data.get(t).getId() + ", " + secondResult.data.get(t).getLink() + ", " + secondResult.data.get(t).getText()+"\n" ;
-					t++;
-				}
-				s = s + "\n ----- \n" + s2  + "\n ----- \n";*/
+
 				
 				s = s+result.data.get(i).getShortText() + ", " + result.data.get(i).getText();
 				url = FixUrlGerman+SrNr+ "/" + result.data.get(i).getLink();
@@ -130,7 +116,7 @@ public class WebParser {
 
 	//-URL laden 
 	public String getText(String url) throws ClientProtocolException, IOException {
-
+		
 		//-String für Rückgabe 
 		String result = null;
 
