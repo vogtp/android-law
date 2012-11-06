@@ -154,10 +154,6 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		law.setVersion(lawData.getLawVersion());
 		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
 
-		//FIXME only update if update successful
-		law.setLastCheck(System.currentTimeMillis());
-		law.setVersion(lawData.getLawVersion());
-		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
 	}
 
 	private long insert(ContentResolver resolver, EntriesModel entriesModel) {
