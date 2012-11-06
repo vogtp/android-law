@@ -143,6 +143,7 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
 			insertLawText(lawData1, resolver, law);
 		}
+
 		//FIXME only update if update successful
 		law.setLastCheck(System.currentTimeMillis());
 		law.setVersion(lawData.getLawVersion());
