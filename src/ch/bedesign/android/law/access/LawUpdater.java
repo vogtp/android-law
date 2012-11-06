@@ -7,23 +7,24 @@ import org.apache.http.client.ClientProtocolException;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import ch.bedesign.android.law.access.LawUpdater.LawUpdateCallback;
 import ch.bedesign.android.law.access.LawUpdater.LoadResult;
+import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.db.DB.Laws;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.EntriesModel;
 import ch.bedesign.android.law.model.LawModel;
 
-public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResult> {
+public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 
 	private static final long UPDATE_INTERVALL_MILLIES = 1000 * 60 * 60 * 24 * 7; // once a week
 
-	public interface LawUpdateCallback {
-		public Context getContext();
-	}
+	//	public interface LawUpdateCallback {
+	//		public Context getContext();
+	//	}
 
 	public class LoadResult {
 		private boolean ok = false;
@@ -35,23 +36,29 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 
 	}
 
+	private final Context ctx;
 
-	private final LawUpdateCallback callback;
 
-	public LawUpdater(LawUpdateCallback callback) {
+//	private final LawUpdateCallback callback;
+
+	public LawUpdater(Context ctx) {
 		super();
-		this.callback = callback;
+		this.ctx = ctx.getApplicationContext();
 	}
 
 	@Override
-	protected LoadResult doInBackground(LawModel... params) {
-		if (params.length < 1) {
+	protected LoadResult doInBackground(Long... lawIds) {
+		if (lawIds.length < 1) {
 			return new LoadResult(false);
 		}
-		for (LawModel param : params) {
-			if (param != null) {
+		for (Long lawId : lawIds) {
+			if (lawId != null) {
 				try {
-					updateLaw(param);
+					Cursor c = ctx.getContentResolver().query(Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, new String[] { Long.toString(lawId) },
+							Laws.SORTORDER_DEFAULT);
+					if (c != null && c.moveToFirst()) {
+						updateLaw(new LawModel(c));
+					}
 				} catch (ClientProtocolException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -80,7 +87,7 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 			// we do not care
 		}
 
-		ContentResolver resolver = callback.getContext().getContentResolver();
+		ContentResolver resolver = ctx.getContentResolver();
 		long lawId = law.getId();
 		lawData.getText(law.getUrl());
 		resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
@@ -90,7 +97,7 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 			Logger.i("Loading law " + i + " " + law.getCode());
 			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
 			WebParser lawDataSecondLevel = new WebParser();
-			lawDataSecondLevel.getText("http://www.admin.ch/ch/d/sr/220/" + lawData.data.get(i).getLink());
+			lawDataSecondLevel.getText(law.getUrl() + "/" + lawData.data.get(i).getLink());
 			int x = 0;
 
 			while (x < lawDataSecondLevel.data.size()) {
@@ -102,7 +109,7 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 					long l2 = insert(resolver,
 							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), null, 1));
 					WebParser lawDataThirdLevel = new WebParser();
-					lawDataThirdLevel.getText("http://www.admin.ch/ch/d/sr/220/" + lawDataSecondLevel.data.get(x).getLink());
+					lawDataThirdLevel.getText(law.getUrl() + "/" + lawDataSecondLevel.data.get(x).getLink());
 					int y = 0;
 					while (y < lawDataThirdLevel.data.size()) {
 						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
@@ -127,9 +134,9 @@ public class LawUpdater extends AsyncTask<LawModel, LawUpdateCallback, LoadResul
 		return ContentUris.parseId(uri);
 	}
 
-	public static void loadLaw(LawUpdateCallback callback, LawModel... laws) {
-		LawUpdater task = new LawUpdater(callback);
-		task.execute(laws);
+	public static void loadLaw(Context ctx, Long... lawIds) {
+		LawUpdater task = new LawUpdater(ctx);
+		task.execute(lawIds);
 	}
 
 }
