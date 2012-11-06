@@ -11,11 +11,11 @@ import java.util.ArrayList;
 
 import ch.bedesign.android.law.log.Logger;
 
-public class parser {
+public class Parser {
 
 	public static void main(String args[]) {
 
-		parser r = new parser();
+		Parser r = new Parser();
 
 	}
 
@@ -66,7 +66,7 @@ public class parser {
 		}
 	}
 
-	ArrayList<LineInfo> data = new ArrayList<parser.LineInfo>();
+	ArrayList<LineInfo> data = new ArrayList<Parser.LineInfo>();
 
 	public void getText(String UrlText) throws IOException {
 		URL url;

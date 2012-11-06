@@ -20,7 +20,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	public SectionsPagerAdapter(ViewPager viewPager, FragmentManager fm) {
 		super(fm);
 		this.viewPager = viewPager;
-		pages.add(0, new LawsOverviewFragment(this));
+		pages.add(0, new LawsOverviewFragment());
 	}
 
 	@Override
@@ -38,11 +38,20 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		return ((ILawFragment) getItem(position)).getName();
 	}
 
-	public void addLayDisplay(LawModel lawModel) {
+	public void addLawDisplay(LawModel lawModel) {
 		Bundle args = new Bundle();
-		Fragment fragment = new LawDisplayFragment(this, lawModel);
-		//		args.putLong(LawDisplayFragment.ARG_LAW_ID, lawModel);
-		//		fragment.setArguments(args);
+		Fragment fragment = new LawDisplayFragment();
+		args.putLong(LawDisplayFragment.ARG_LAW_ID, lawModel.getId());
+		args.putString(LawDisplayFragment.ARG_LAW_NAME, lawModel.getName());
+		fragment.setArguments(args);
+		pages.add(fragment);
+		notifyDataSetChanged();
+		viewPager.setCurrentItem(pages.size(), true);
+	}
+
+	public void addFromBundle(Bundle args) {
+		Fragment fragment = new LawDisplayFragment();
+		fragment.setArguments(args);
 		pages.add(fragment);
 		notifyDataSetChanged();
 		viewPager.setCurrentItem(pages.size(), true);
