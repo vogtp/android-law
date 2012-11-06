@@ -1,5 +1,6 @@
 package ch.bedesign.android.law.view.fragment;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -11,20 +12,22 @@ import android.view.View;
 import android.widget.ListView;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.model.LawModel;
-import ch.bedesign.android.law.view.adapter.SectionsPagerAdapter;
+import ch.bedesign.android.law.view.activity.MainActivity;
 
 public class LawsOverviewFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
 	private SimpleCursorAdapter adapter;
-	private final SectionsPagerAdapter pagerAdapter;
 
-	public LawsOverviewFragment(SectionsPagerAdapter pagerAdapter) {
-		this.pagerAdapter = pagerAdapter;
-	}
+	//	private final SectionsPagerAdapter pagerAdapter;
+
+	//	public LawsOverviewFragment(SectionsPagerAdapter pagerAdapter) {
+	//		this.pagerAdapter = pagerAdapter;
+	//	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
 		setListShown(false);
 		getLoaderManager().initLoader(0, null, this);
 
@@ -39,7 +42,11 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		super.onListItemClick(l, v, position, id);
 		Cursor cursor = adapter.getCursor();
 		if (cursor.moveToPosition(position)) {
-			pagerAdapter.addLayDisplay(new LawModel(cursor));
+			Activity act = getActivity();
+			if (act != null && act instanceof MainActivity) {
+				((MainActivity) act).addLawDisplay(new LawModel(cursor));
+			}
+
 		}
 	}
 

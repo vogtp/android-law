@@ -1,8 +1,8 @@
 package ch.bedesign.android.law.view.fragment;
 
+import java.io.Serializable;
 import java.util.Stack;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -16,36 +16,57 @@ import android.text.Spanned;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
-import ch.bedesign.android.law.access.LawUpdater.LawUpdateCallback;
 import ch.bedesign.android.law.db.DB;
-import ch.bedesign.android.law.model.LawModel;
-import ch.bedesign.android.law.view.adapter.SectionsPagerAdapter;
+import ch.bedesign.android.law.log.Logger;
 
-public class LawDisplayFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor>, LawUpdateCallback {
+public class LawDisplayFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
 	public static final String ARG_LAW_ID = "lawId";
+	public static final String ARG_LAW_NAME = "lawName";
+	private static final String ARG_PARENT_ID = "parentId";
+	private static final String ARG_PARENT_ID_STACK = "parentIdStack";
 	private SimpleCursorAdapter adapter;
-	private final SectionsPagerAdapter pagerAdapter;
-	//	private long lawId;
+	private long lawId;
+	private String lawName;
 	private long parentId = -1;
-	private final LawModel lawModel;
-	private final Stack<Long> parents = new Stack<Long>();
+	private Stack<Long> parents = new Stack<Long>();
 
-	public LawDisplayFragment(SectionsPagerAdapter pagerAdapter, LawModel lawModel) {
-		this.pagerAdapter = pagerAdapter;
-		this.lawModel = lawModel;
-	}
+	//	public LawDisplayFragment(SectionsPagerAdapter pagerAdapter, LawModel lawModel) {
+	//		this.pagerAdapter = pagerAdapter;
+	//		this.lawModel = lawModel;
+	//	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
 		setListShown(false);
 		getLoaderManager().initLoader(0, null, this);
-		//		Bundle args = getArguments();
-		//		lawId = args.getLong(ARG_LAW_ID);
-		LawUpdater.loadLaw(this, lawModel);
+		Bundle args;
+		if (savedInstanceState != null) {
+			args = savedInstanceState;
+		} else {
+			args = getArguments();
+		}
+		lawId = args.getLong(ARG_LAW_ID);
+		lawName = args.getString(ARG_LAW_NAME);
+		if (args.containsKey(ARG_PARENT_ID)) {
+			parentId = args.getLong(ARG_PARENT_ID);
+		}
+		if (args.containsKey(ARG_PARENT_ID_STACK)) {
+			Serializable serializable = args.getSerializable(ARG_PARENT_ID_STACK);
+			if (serializable instanceof Stack<?>) {
+				parents = (Stack<Long>) serializable;
+			} else {
+				String msg = "Something went wrong with the parent IDs";
+				Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+				Logger.e(msg);
+			}
+		}
+		LawUpdater.loadLaw(getActivity().getApplicationContext(), lawId);
 
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_display_list_item, null,
 				new String[] { DB.Entries.NAME_FULL_NAME, DB.Entries.NAME_TEXT },
@@ -80,11 +101,11 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	}
 
 	public String getName() {
-		return lawModel.getName();
+		return lawName;
 	}
 
 	public Loader<Cursor> onCreateLoader(int loader, Bundle bundle) {
-		String[] args = new String[] { Long.toString(lawModel.getId()), Long.toString(parentId) };
+		String[] args = new String[] { Long.toString(lawId), Long.toString(parentId) };
 		return new CursorLoader(getActivity(), DB.Entries.CONTENT_URI, DB.Entries.PROJECTION_DEFAULT, DB.Entries.SELECTION_LAW_PARENT, args, DB.Entries.SORTORDER_DEFAULT);
 	}
 
@@ -115,10 +136,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		adapter.swapCursor(null);
 	}
 
-	public Context getContext() {
-		return getActivity().getApplicationContext();
-	}
-
 	public boolean onBackPressed() {
 		if (parentId == -1) {
 			return false;
@@ -127,5 +144,15 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		getLoaderManager().restartLoader(0, null, this);
 		return true;
 	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putLong(ARG_LAW_ID, lawId);
+		outState.putLong(ARG_PARENT_ID, parentId);
+		outState.putString(ARG_LAW_NAME, lawName);
+		outState.putSerializable(ARG_PARENT_ID_STACK, parents);
+	}
+
 
 }
