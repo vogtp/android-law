@@ -14,6 +14,7 @@ import ch.bedesign.android.law.access.LawUpdater.LoadResult;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.db.DB.Laws;
+import ch.bedesign.android.law.db.DbInitaliser;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.EntriesModel;
 import ch.bedesign.android.law.model.LawModel;
@@ -38,8 +39,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 
 	private final Context ctx;
 
-
-//	private final LawUpdateCallback callback;
+	//	private final LawUpdateCallback callback;
 
 	public LawUpdater(Context ctx) {
 		super();
@@ -71,9 +71,42 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		return new LoadResult(true);
 	}
 
+	private void insertLawText(Parser lawData, ContentResolver resolver, LawModel law) throws ClientProtocolException, IOException {
+		long lawId = law.getId();
+		String SrNr = law.getCode();
+		int i = 0;
+		Logger.i("Loading law " + law.getCode());
+		while (i < lawData.data.size()) {
+			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
+			Parser lawDataSecondLevel = new Parser();
+			lawDataSecondLevel.getText("http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawData.data.get(i).getLink());
+			int x = 0;
+
+			while (x < lawDataSecondLevel.data.size()) {
+				if (lawDataSecondLevel.data.get(x).getId() == "ArtikelText") {
+					insert(resolver, new EntriesModel(lawId, p, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), lawDataSecondLevel.data.get(x).getText(), 0));
+				}
+				{
+					long l2 = insert(resolver,
+							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), null, 1));
+					Parser lawDataThirdLevel = new Parser();
+					lawDataThirdLevel.getText("http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawDataSecondLevel.data.get(x).getLink());
+					int y = 0;
+					while (y < lawDataThirdLevel.data.size()) {
+						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
+								lawDataThirdLevel.data.get(y).getText(), 0));
+						y++;
+					}
+				}
+				x++;
+			}
+			i++;
+		}
+	}
+
 	private void updateLaw(LawModel law) throws ClientProtocolException, IOException {
 
-		WebParser lawData = new WebParser();
+		Parser lawData = new Parser();
 		try {
 			if (System.currentTimeMillis() < law.getLastCheck() + UPDATE_INTERVALL_MILLIES) {
 				Logger.i("Not updating since the law is too new");
@@ -88,45 +121,43 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		}
 
 		ContentResolver resolver = ctx.getContentResolver();
-		long lawId = law.getId();
-		lawData.getText(law.getUrl());
-		resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
-		int i = 0;
-		Logger.i("Loading law " + law.getCode());
-		while (i < lawData.data.size()) {
-			Logger.i("Loading law " + i + " " + law.getCode());
-			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
-			WebParser lawDataSecondLevel = new WebParser();
-			lawDataSecondLevel.getText(law.getUrl() + "/" + lawData.data.get(i).getLink());
-			int x = 0;
 
-			while (x < lawDataSecondLevel.data.size()) {
-				Logger.i("Loading law " + i + " / " + x + " " + law.getCode());
-				if (lawDataSecondLevel.data.get(x).getId() == "ArtikelText") {
-					insert(resolver, new EntriesModel(lawId, p, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), lawDataSecondLevel.data.get(x).getText(), 0));
-				}
-				{
-					long l2 = insert(resolver,
-							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), null, 1));
-					WebParser lawDataThirdLevel = new WebParser();
-					lawDataThirdLevel.getText(law.getUrl() + "/" + lawDataSecondLevel.data.get(x).getLink());
-					int y = 0;
-					while (y < lawDataThirdLevel.data.size()) {
-						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
-								lawDataThirdLevel.data.get(y).getText(), 0));
-						y++;
-					}
-				}
-				x++;
-			}
-			i++;
+		if (DbInitaliser.CODE_VERFASSUNG.equals(law.getCode())) {
+			Parser lawData1 = new Parser();
+			lawData1.getText("http://www.admin.ch/ch/d/sr/101/index.html");
+			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
+			insertLawText(lawData1, resolver, law);
 		}
 
+		if (DbInitaliser.CODE_OR.equals(law.getCode())) {
+			Parser lawData1 = new Parser();
+			lawData1.getText("http://www.admin.ch/ch/d/sr/220/index.html");
+			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
+			insertLawText(lawData1, resolver, law);
+		}
+
+		if (DbInitaliser.CODE_ZGB.equals(law.getCode())) {
+			Parser lawData1 = new Parser();
+			lawData1.getText("http://www.admin.ch/ch/d/sr/210/index.html");
+			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
+			insertLawText(lawData1, resolver, law);
+		}
+
+		if (DbInitaliser.CODE_STGB.equals(law.getCode())) {
+			Parser lawData1 = new Parser();
+			lawData1.getText("http://www.admin.ch/ch/d/sr/311_0/index.html");
+			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
+			insertLawText(lawData1, resolver, law);
+		}
 		//FIXME only update if update successful
 		law.setLastCheck(System.currentTimeMillis());
 		law.setVersion(lawData.getLawVersion());
 		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
 
+		//FIXME only update if update successful
+		law.setLastCheck(System.currentTimeMillis());
+		law.setVersion(lawData.getLawVersion());
+		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
 	}
 
 	private long insert(ContentResolver resolver, EntriesModel entriesModel) {
