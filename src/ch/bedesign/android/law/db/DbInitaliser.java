@@ -22,13 +22,13 @@ public class DbInitaliser {
 
 		if (hasThisLaw(resolver, CODE_VERFASSUNG)) {
 			LawModel verfassung = new LawModel(CODE_VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", CountryModel.CH_de.getId(),
-					"18. April 1999 (Stand am 11. März 2012)", "http://www.admin.ch/ch/d/sr/101/index.html", -1);
+					"18. April 1999 (Stand am 11. M�rz 2012)", "http://www.admin.ch/ch/d/sr/101/index.html", -1);
 			resolver.insert(Laws.CONTENT_URI, verfassung.getValues());
 		}
 
 		if (hasThisLaw(resolver, CODE_OR)) {
 			LawModel or = new LawModel(CODE_OR, "Obligationenrecht", CountryModel.CH_de.getId(),
-					"30. März 1911 (Stand am 1. März 2012)", "http://www.admin.ch/ch/d/sr/220/index.html", -1);
+					"30. März 1911 (Stand am 1. M�rz 2012)", "http://www.admin.ch/ch/d/sr/220/index.html", -1);
 			resolver.insert(Laws.CONTENT_URI, or.getValues());
 		}
 		if (hasThisLaw(resolver, CODE_ZGB)) {
