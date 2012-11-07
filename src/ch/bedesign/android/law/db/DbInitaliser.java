@@ -3,6 +3,7 @@ package ch.bedesign.android.law.db;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DB.Laws;
 import ch.bedesign.android.law.model.CountryModel;
 import ch.bedesign.android.law.model.LawModel;
@@ -15,34 +16,20 @@ public class DbInitaliser {
 	public static final String CODE_STGB = "311_0";
 
 	public static final void initDb(Context ctx) {
+
+		insertLawIfNotExists(ctx, CODE_VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "http://www.admin.ch/ch/d/sr/101/index.html");
+		insertLawIfNotExists(ctx, CODE_OR,"Obligationenrecht" , "http://www.admin.ch/ch/d/sr/220/index.html");
+		insertLawIfNotExists(ctx, CODE_ZGB, "Schweizerisches Zivilgesetzbuch", "http://www.admin.ch/ch/d/sr/210/index.html");
+		insertLawIfNotExists(ctx, CODE_STGB, "Schweizerisches Strafgesetzbuch", "http://www.admin.ch/ch/d/sr/311_0/index.html");
+
+	}
+
+	private static void insertLawIfNotExists(Context ctx, String code, String name, String url) {
 		ContentResolver resolver = ctx.getContentResolver();
-
-		// TODO make more robust
-		
-
-		if (hasThisLaw(resolver, CODE_VERFASSUNG)) {
-			LawModel verfassung = new LawModel(CODE_VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", CountryModel.CH_de.getId(),
-					"18. April 1999 (Stand am 11. MÃrz 2012)", "http://www.admin.ch/ch/d/sr/101/index.html", -1);
+		if (hasThisLaw(resolver, code)) {
+			LawModel verfassung = new LawModel(code, name, CountryModel.CH_de.getId(), ctx.getString(R.string.msg_law_not_yet_loaded), url, -1);
 			resolver.insert(Laws.CONTENT_URI, verfassung.getValues());
 		}
-
-		if (hasThisLaw(resolver, CODE_OR)) {
-			LawModel or = new LawModel(CODE_OR, "Obligationenrecht", CountryModel.CH_de.getId(),
-					"30. MÃ¤rz 1911 (Stand am 1. MÃrz 2012)", "http://www.admin.ch/ch/d/sr/220/index.html", -1);
-			resolver.insert(Laws.CONTENT_URI, or.getValues());
-		}
-		if (hasThisLaw(resolver, CODE_ZGB)) {
-			LawModel zgb = new LawModel(CODE_ZGB, "Schweizerisches Zivilgesetzbuch", CountryModel.CH_de.getId(),
-					"10. Dezember 1907 (Stand am 1. Januar 2012)", "http://www.admin.ch/ch/d/sr/210/index.html", -1);
-			resolver.insert(Laws.CONTENT_URI, zgb.getValues());
-		}
-		if (hasThisLaw(resolver, CODE_STGB)) {
-			LawModel stgb = new LawModel(CODE_STGB, "Schweizerisches Strafgesetzbuch", CountryModel.CH_de.getId(),
-					"21. Dezember 1937 (Stand am 1. Oktober 2012)", "http://www.admin.ch/ch/d/sr/311_0/index.html", -1);
-			resolver.insert(Laws.CONTENT_URI, stgb.getValues());
-		}
-		
-
 	}
 
 	private static boolean hasThisLaw(ContentResolver resolver, String code) {
