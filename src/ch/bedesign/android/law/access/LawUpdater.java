@@ -53,11 +53,16 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		}
 		for (Long lawId : lawIds) {
 			if (lawId != null) {
+				LawModel law = null;
+				ContentResolver resolver = ctx.getContentResolver();
 				try {
-					Cursor c = ctx.getContentResolver().query(Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, new String[] { Long.toString(lawId) },
+					Cursor c = resolver.query(Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, new String[] { Long.toString(lawId) },
 							Laws.SORTORDER_DEFAULT);
 					if (c != null && c.moveToFirst()) {
-						updateLaw(new LawModel(c));
+						law = new LawModel(c);
+						law.setIsUpdating(System.currentTimeMillis());
+						resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toBinaryString(lawId) });
+						updateLaw(resolver, law);
 					}
 				} catch (ClientProtocolException e) {
 					// TODO Auto-generated catch block
@@ -65,6 +70,9 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} finally {
+					law.setIsUpdating(-1);
+					resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toBinaryString(lawId) });
 				}
 			}
 		}
@@ -104,7 +112,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		}
 	}
 
-	private void updateLaw(LawModel law) throws ClientProtocolException, IOException {
+	private void updateLaw(ContentResolver resolver, LawModel law) throws ClientProtocolException, IOException {
 
 		Parser lawData = new Parser();
 		try {
@@ -119,8 +127,6 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		} catch (Exception e) {
 			// we do not care
 		}
-
-		ContentResolver resolver = ctx.getContentResolver();
 
 		if (DbInitaliser.CODE_VERFASSUNG.equals(law.getCode())) {
 			Parser lawData1 = new Parser();

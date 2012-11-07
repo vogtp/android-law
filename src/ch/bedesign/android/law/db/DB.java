@@ -40,14 +40,14 @@ public interface DB {
 
 	public class OpenHelper extends SQLiteOpenHelper {
 
-		private static final int DATABASE_VERSION = 1;
+		private static final int DATABASE_VERSION = 2;
 
 		//		private static final String CREATE_COUNTRIES_TABLE = "create table if not exists " + Countries.TABLE_NAME + " (" + DB.NAME_ID
 		//				+ " integer primary key, " + Countries.NAME_NAME + " text," + Countries.NAME_ISO2_CODE + " text);";
 
 		private static final String CREATE_LAWS_TABLE = "create table if not exists " + Laws.TABLE_NAME + " (" + DB.NAME_ID + " integer primary key, "
 				+ Laws.NAME_CODE + " text, " + Laws.NAME_NAME + " text, " + Laws.NAME_COUNTRY_ID + " long," + Laws.NAME_VERSION + " text, "
-				+ Laws.NAME_URL + " text, " + Laws.NAME_LAST_CHECK + " long);";
+				+ Laws.NAME_URL + " text, " + Laws.NAME_LAST_CHECK + " long, " + Laws.NAME_IS_UPDATING + " long);";
 
 		private static final String CREATE_ENTRYS_TABLE = "create table if not exists " + Entries.TABLE_NAME + " (" + DB.NAME_ID + " integer primary key, "
 				+ Entries.NAME_LAW_ID + " long, " + Entries.NAME_SHORT_NAME + " text, " + Entries.NAME_FULL_NAME + " text," + Entries.NAME_PARENT_ID + " long, "
@@ -74,7 +74,7 @@ public interface DB {
 			switch (oldVersion) {
 			case 1:
 				Logger.w("Upgrading to DB Version 2...");
-				//				db.execSQL();
+				db.execSQL("alter table " + Laws.TABLE_NAME + " add column " + Laws.NAME_IS_UPDATING + " int;");
 				// nobreak
 
 			default:
@@ -121,6 +121,7 @@ public interface DB {
 		public static final String NAME_VERSION = "version";
 		public static final String NAME_URL = "url";
 		public static final String NAME_LAST_CHECK = "lastCheck";
+		public static final String NAME_IS_UPDATING = "isUpdating";
 
 		public static final int INDEX_CODE = 1;
 		public static final int INDEX_NAME = 2;
@@ -128,8 +129,9 @@ public interface DB {
 		public static final int INDEX_VERSION = 4;
 		public static final int INDEX_URL = 5;
 		public static final int INDEX_LAST_CHECK = 6;
+		public static final int INDEX_IS_UPDATING = 7;
 
-		public static final String[] colNames = new String[] { NAME_ID, NAME_CODE, NAME_NAME, NAME_COUNTRY_ID, NAME_VERSION, NAME_URL, NAME_LAST_CHECK };
+		public static final String[] colNames = new String[] { NAME_ID, NAME_CODE, NAME_NAME, NAME_COUNTRY_ID, NAME_VERSION, NAME_URL, NAME_LAST_CHECK, NAME_IS_UPDATING };
 		public static final String[] PROJECTION_DEFAULT = colNames;
 
 		public static final String SORTORDER_DEFAULT = NAME_NAME + " DESC";

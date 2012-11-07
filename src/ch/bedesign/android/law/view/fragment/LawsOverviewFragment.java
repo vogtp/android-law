@@ -8,8 +8,11 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.activity.MainActivity;
@@ -34,6 +37,19 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
 				new String[] { DB.Laws.NAME_NAME, DB.Laws.NAME_VERSION },
 				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
+		adapter.setViewBinder(new ViewBinder() {
+
+			public boolean setViewValue(View v, Cursor c, int colIdx) {
+				if (colIdx == DB.Laws.INDEX_VERSION) {
+					LawModel law = new LawModel(c);
+					if (law.isUpdating()) {
+						((TextView) v).setText(R.string.msg_updating);
+						return true;
+					}
+				}
+				return false;
+			}
+		});
 		setListAdapter(adapter);
 	}
 

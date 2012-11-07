@@ -7,6 +7,7 @@ import ch.bedesign.android.law.db.DB.Laws;
 
 public class LawModel {
 
+	private static final long HOUR_IN_MILLIES = 1000 * 60 * 60;
 	private long id = -1;
 	private String code;
 	private String name;
@@ -14,6 +15,7 @@ public class LawModel {
 	private String version;
 	private String url;
 	private long lastCheck;
+	private long isUpdating = -1;
 
 	public LawModel(String code, String name, long countryId, String version, String url, long lastCheck) {
 		super();
@@ -33,7 +35,8 @@ public class LawModel {
 		this.countryId = c.getLong(Laws.INDEX_COUNTRY_ID);
 		this.version = c.getString(Laws.INDEX_VERSION);
 		this.url = c.getString(Laws.INDEX_URL);
-		this.lastCheck = c.getLong(Laws.INDEX_LAST_CHECK);;
+		this.lastCheck = c.getLong(Laws.INDEX_LAST_CHECK);
+		this.setIsUpdating(c.getLong(Laws.INDEX_IS_UPDATING));
 	}
 
 	public ContentValues getValues() {
@@ -47,6 +50,7 @@ public class LawModel {
 		values.put(Laws.NAME_VERSION, version);
 		values.put(Laws.NAME_URL, url);
 		values.put(Laws.NAME_LAST_CHECK, lastCheck);
+		values.put(Laws.NAME_IS_UPDATING, getIsUpdating());
 		return values;
 	}
 
@@ -100,5 +104,20 @@ public class LawModel {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public boolean isUpdating() {
+		if (isUpdating < HOUR_IN_MILLIES) {
+			return false;
+		}
+		return true;
+	}
+
+	public long getIsUpdating() {
+		return isUpdating;
+	}
+
+	public void setIsUpdating(long isUpdating) {
+		this.isUpdating = isUpdating;
 	}
 }
