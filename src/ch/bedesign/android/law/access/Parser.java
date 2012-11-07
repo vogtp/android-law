@@ -116,7 +116,10 @@ public class Parser {
 
 			//clean up string
 			String article = sbDetail.toString();
-			article = article.substring(article.indexOf("<H5>"));
+			int idx = article.indexOf("<H5>");
+			if (idx > 0 && idx < article.length()) {
+				article = article.substring(idx);
+			}
 
 			String cleanLineText = article;
 			data.add(new LineInfo("ArtikelText", "", cleanLineText, ""));
@@ -125,7 +128,7 @@ public class Parser {
 			//-String zurückgeben 
 			return article;
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.e("error parsing", e);
 			//	e.printStackTrace();
 
