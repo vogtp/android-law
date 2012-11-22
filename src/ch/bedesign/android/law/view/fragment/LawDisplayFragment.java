@@ -69,7 +69,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		LawUpdater.loadLaw(getActivity().getApplicationContext(), lawId);
 
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_display_list_item, null,
-				new String[] { DB.Entries.NAME_FULL_NAME, DB.Entries.NAME_TEXT },
+				new String[] { DB.Entries.NAME_SHORT_NAME, DB.Entries.NAME_TEXT },
 				new int[] { R.id.tvLawTitle, R.id.tvLawText }, 0);
 		ViewBinder binder = new ViewBinder() {
 
@@ -80,6 +80,19 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 						if (string != null) {
 							Spanned fromHtml = Html.fromHtml(string);
 							((TextView) view).setText(fromHtml);
+							view.setVisibility(View.VISIBLE);
+							((View) view.getParent()).findViewById(R.id.tvLawTitle).setVisibility(View.GONE);
+							return true;
+						}
+					}
+				} else if (DB.Entries.INDEX_SHORT_NAME == idx) {
+					if (view instanceof TextView) {
+						String string = cursor.getString(idx);
+						if (string != null) {
+							Spanned fromHtml = Html.fromHtml(string);
+							((TextView) view).setText(fromHtml);
+							view.setVisibility(View.VISIBLE);
+							((View) view.getParent()).findViewById(R.id.tvLawText).setVisibility(View.GONE);
 							return true;
 						}
 					}

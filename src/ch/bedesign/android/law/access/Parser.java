@@ -5,19 +5,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
+import android.content.Context;
 import ch.bedesign.android.law.log.Logger;
 
 public class Parser {
-
-	public static void main(String args[]) {
-
-		Parser r = new Parser();
-
-	}
 
 	class LineInfo {
 		private String id; //type long?
@@ -66,24 +59,33 @@ public class Parser {
 		}
 	}
 
+	private final Context context;
+	private final String urlText;
 	ArrayList<LineInfo> data = new ArrayList<Parser.LineInfo>();
 
-	public void getText(String UrlText) throws IOException {
-		URL url;
-		url = new URL(UrlText);
+	public Parser(Context context, String urlText) {
+		super();
+		this.context = context;
+		this.urlText = urlText;
+	}
 
-		   HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-		   try {
-		     InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-				if(UrlText.indexOf("index") > 0){
-					readStream(in);
-				}else{
-					readArticleStream(in);
-				}    
+
+	public void parse() throws IOException {
+
+		UrlLoader loader = new UrlLoader(context);
+
+		try {
+			InputStream in = new BufferedInputStream(loader.getStreamFromUrl(urlText));
+			if (urlText.indexOf("index") > 0) {
+				readStream(in);
+			}
+			else {
+				readArticleStream(in);
+			}
 		} finally {
-		     urlConnection.disconnect();
-		   }
-		
+			loader.finish();
+		}
+
 	}
 
 	private String readArticleStream(InputStream is) {
@@ -121,11 +123,8 @@ public class Parser {
 				article = article.substring(idx);
 			}
 
-			String cleanLineText = article;
-			data.add(new LineInfo("ArtikelText", "", cleanLineText, ""));
+			data.add(new LineInfo("ArtikelText", "", article, ""));
 
-			//-Exception abfangen     
-			//-String zurückgeben 
 			return article;
 
 		} catch (Exception e) {
@@ -173,16 +172,16 @@ public class Parser {
 
 				if (line.contains("<a name=\"id")) {
 					cleanLineText = line.substring(line.indexOf("M(this)\">") + 9, line.lastIndexOf("</a>"));
-					if (cleanLineText.contains("<b>")) {
-						cleanLineShortText = cleanLineText.substring(cleanLineText.indexOf("<b>") + 3, cleanLineText.indexOf("</b>"));
-						cleanLineText = cleanLineText.substring(cleanLineText.indexOf("</b>") + 4);
-					} else if (cleanLineText.contains("<B>")) {
-						cleanLineShortText = cleanLineText.substring(cleanLineText.indexOf("<B>") + 3, cleanLineText.indexOf("</B>"));
-						cleanLineText = cleanLineText.substring(cleanLineText.indexOf("</B>") + 4);
-					}
+					/*		if (cleanLineText.contains("<b>")) {
+								cleanLineShortText = cleanLineText.substring(cleanLineText.indexOf("<b>") + 3, cleanLineText.indexOf("</b>"));
+								cleanLineText = cleanLineText.substring(cleanLineText.indexOf("</b>") + 4);
+							} else if (cleanLineText.contains("<B>")) {
+								cleanLineShortText = cleanLineText.substring(cleanLineText.indexOf("<B>") + 3, cleanLineText.indexOf("</B>"));
+								cleanLineText = cleanLineText.substring(cleanLineText.indexOf("</B>") + 4);
+							}*/
 					cleanLineID = line.substring(line.indexOf("name=") + 6, line.indexOf("href") - 2);
 					cleanLineLink = line.substring(line.indexOf("href=") + 8, line.indexOf("html") + 4);
-					data.add(new LineInfo(cleanLineID, cleanLineLink, cleanLineText, cleanLineShortText));
+					data.add(new LineInfo(cleanLineID, cleanLineLink, "", /*cleanLineShortText*/cleanLineText));
 				}
 			}
 
@@ -191,29 +190,57 @@ public class Parser {
 			return sbDetail.toString();
 		} catch (IOException e) {
 			Logger.e("error parsing", e);
-			//	e.printStackTrace();
 
 		} finally {
 			try {
-				if (is == null) {
+				if (is != null) {
 					is.close();
 				}
-				if (reader == null) {
+				if (reader != null) {
 					reader.close();
 				}
-
-				//-Exception abfangen        
 			} catch (IOException e) {
 				// interssiert niemand
-				//e.printStackTrace();
-
 			}
 		}
 		return null;
 	}
 
 	public String getLawVersion() {
-		// TODO Auto-generated method stub
+		UrlLoader loader = new UrlLoader(context);
+		InputStream is = null;
+		BufferedReader reader = null;
+		try {
+			is = new BufferedInputStream(loader.getStreamFromUrl(urlText));
+			reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"));
+
+			String line = null;
+			String lawVersion = null;
+
+			while ((line = reader.readLine()) != null) {
+				if (line.contains("<div class='Stand'>")) {
+					lawVersion = line.substring(line.indexOf("<i>") + 3, line.indexOf("</i>"));
+					return lawVersion;
+				}
+			}
+
+		} catch (IOException e) {
+			Logger.e("error parsing", e);
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+				if (reader != null) {
+					reader.close();
+				}
+				if (loader != null) {
+					loader.finish();
+				}
+			} catch (IOException e) {
+				// interssiert niemand
+			}
+		}
 		return null;
 	}
 }
