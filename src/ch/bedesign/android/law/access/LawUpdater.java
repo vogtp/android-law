@@ -71,8 +71,10 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} finally {
-					law.setIsUpdating(-1);
+					if (law != null) {
+						law.setIsUpdating(-1);
 					resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toBinaryString(lawId) });
+					}
 				}
 			}
 		}
