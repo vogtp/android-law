@@ -143,7 +143,8 @@ public interface DB {
 
 		public static final String NAME_LAW_ID = "lawId";
 		/**
-		 * The name as it would apear in the context e.g. Artikel 7
+		 * The name as it would apear in the context e.g. Artikel 7 Entspricht
+		 * dem Variable shortText Aus dem Parser.
 		 */
 		public static final String NAME_SHORT_NAME = "shortNname";
 		/**

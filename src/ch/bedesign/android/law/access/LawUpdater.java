@@ -14,7 +14,6 @@ import ch.bedesign.android.law.access.LawUpdater.LoadResult;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.db.DB.Laws;
-import ch.bedesign.android.law.db.DbInitaliser;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.EntriesModel;
 import ch.bedesign.android.law.model.LawModel;
@@ -64,12 +63,8 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 						resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toBinaryString(lawId) });
 						updateLaw(resolver, law);
 					}
-				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (Exception e) {
+					Logger.w("Cannot update law", e);
 				} finally {
 					if (law != null) {
 						law.setIsUpdating(-1);
@@ -88,8 +83,8 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		Logger.i("Loading law " + law.getCode());
 		while (i < lawData.data.size()) {
 			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
-			Parser lawDataSecondLevel = new Parser();
-			lawDataSecondLevel.getText("http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawData.data.get(i).getLink());
+			Parser lawDataSecondLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawData.data.get(i).getLink());
+			lawDataSecondLevel.parse();
 			int x = 0;
 
 			while (x < lawDataSecondLevel.data.size()) {
@@ -99,8 +94,8 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 				{
 					long l2 = insert(resolver,
 							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), null, 1));
-					Parser lawDataThirdLevel = new Parser();
-					lawDataThirdLevel.getText("http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawDataSecondLevel.data.get(x).getLink());
+					Parser lawDataThirdLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawDataSecondLevel.data.get(x).getLink());
+					lawDataThirdLevel.parse();
 					int y = 0;
 					while (y < lawDataThirdLevel.data.size()) {
 						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
@@ -116,7 +111,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 
 	private void updateLaw(ContentResolver resolver, LawModel law) throws ClientProtocolException, IOException {
 
-		Parser lawData = new Parser();
+		Parser lawData = new Parser(ctx, law.getUrl());
 		try {
 			if (System.currentTimeMillis() < law.getLastCheck() + UPDATE_INTERVALL_MILLIES) {
 				Logger.i("Not updating since the law is too new");
@@ -130,33 +125,10 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 			// we do not care
 		}
 
-		if (DbInitaliser.CODE_VERFASSUNG.equals(law.getCode())) {
-			Parser lawData1 = new Parser();
-			lawData1.getText("http://www.admin.ch/ch/d/sr/101/index.html");
-			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
-			insertLawText(lawData1, resolver, law);
-		}
+		lawData.parse();
+		resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
+		insertLawText(lawData, resolver, law);
 
-		if (DbInitaliser.CODE_OR.equals(law.getCode())) {
-			Parser lawData1 = new Parser();
-			lawData1.getText("http://www.admin.ch/ch/d/sr/220/index.html");
-			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
-			insertLawText(lawData1, resolver, law);
-		}
-
-		if (DbInitaliser.CODE_ZGB.equals(law.getCode())) {
-			Parser lawData1 = new Parser();
-			lawData1.getText("http://www.admin.ch/ch/d/sr/210/index.html");
-			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
-			insertLawText(lawData1, resolver, law);
-		}
-
-		if (DbInitaliser.CODE_STGB.equals(law.getCode())) {
-			Parser lawData1 = new Parser();
-			lawData1.getText("http://www.admin.ch/ch/d/sr/311_0/index.html");
-			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
-			insertLawText(lawData1, resolver, law);
-		}
 		//FIXME only update if update successful
 		law.setLastCheck(System.currentTimeMillis());
 		law.setVersion(lawData.getLawVersion());
