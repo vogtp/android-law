@@ -62,20 +62,23 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		int count = sectionsPagerAdapter.getCount();
-		outState.putInt(STATE_FRAG_COUNT, count);
-		for (int i = 1; i < count; i++) {
-			Bundle b = new Bundle();
-			sectionsPagerAdapter.getItem(i).onSaveInstanceState(b);
-			outState.putBundle(STATE_FRAGMENT + i, b);
+		protected void onSaveInstanceState(Bundle outState) {
+			super.onSaveInstanceState(outState);
+//			Parcelable state = sectionsPagerAdapter.saveState();
+//			outState.putParcelable(STATE_FRAGMENT, state);
+			int count = sectionsPagerAdapter.getCount();
+			outState.putInt(STATE_FRAG_COUNT, count);
+			for (int i = 1; i < count; i++) {
+				Bundle b = new Bundle();
+				sectionsPagerAdapter.getItem(i).onSaveInstanceState(b);
+				outState.putBundle(STATE_FRAGMENT + i, b);
 		}
-	}
+		}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
+		//			sectionsPagerAdapter.restoreState(savedInstanceState.getParcelable(STATE_FRAGMENT), getClassLoader());
 		int count = savedInstanceState.getInt(STATE_FRAG_COUNT);
 		for (int i = 1; i < count; i++) {
 			Bundle bundle = savedInstanceState.getBundle(STATE_FRAGMENT + i);

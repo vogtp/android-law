@@ -3,16 +3,17 @@ package ch.bedesign.android.law.view.adapter;
 import java.util.ArrayList;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.fragment.ILawFragment;
 import ch.bedesign.android.law.view.fragment.LawDisplayFragment;
 import ch.bedesign.android.law.view.fragment.LawsOverviewFragment;
 
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 	private final ArrayList<Fragment> pages = new ArrayList<Fragment>();
 	private final ViewPager viewPager;
@@ -59,6 +60,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 	public boolean onBackPressed(int position) {
 		return ((ILawFragment) getItem(position)).onBackPressed();
+	}
+
+	@Override
+	public Parcelable saveState() {
+		return null;
 	}
 
 }
