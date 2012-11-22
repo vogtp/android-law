@@ -50,6 +50,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		lawName = args.getString(ARG_LAW_NAME);
 		if (args.containsKey(ARG_PARENT_ID)) {
 			parentId = args.getLong(ARG_PARENT_ID);
+			Logger.v("got parentID=" + parentId);
 		}
 		if (args.containsKey(ARG_PARENT_ID_STACK)) {
 			Serializable serializable = args.getSerializable(ARG_PARENT_ID_STACK);
@@ -119,7 +120,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		if (c == null || c.getCount() < 1) {
-			parentId = getLastParent();
 			getLoaderManager().restartLoader(0, null, this);
 			return;
 		}
