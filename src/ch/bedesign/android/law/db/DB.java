@@ -1,8 +1,5 @@
 package ch.bedesign.android.law.db;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -23,18 +20,11 @@ public interface DB {
 
 	public class UriTableConfig {
 
-		public static Map<Integer, UriTableMapping> map;
+		public static UriTableMapping[] map = new UriTableMapping[] {
+				Laws.URI_TABLE_MAPPING,
+				Entries.URI_TABLE_MAPPING
 
-		private static final int LAW = 1;
-		private static final int ENRTY = 2;
-		//		private static final int COUNTRY = 3;
-
-		static {
-			map = new HashMap<Integer, UriTableMapping>();
-			map.put(LAW, Laws.URI_TABLE_MAPPING);
-			map.put(ENRTY, Entries.URI_TABLE_MAPPING);
-			//			map.put(COUNTRY, Countries.URI_TABLE_MAPPING);
-		}
+		};
 
 	}
 
