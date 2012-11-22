@@ -34,11 +34,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private long parentId = -1;
 	private Stack<Long> parents = new Stack<Long>();
 
-	//	public LawDisplayFragment(SectionsPagerAdapter pagerAdapter, LawModel lawModel) {
-	//		this.pagerAdapter = pagerAdapter;
-	//		this.lawModel = lawModel;
-	//	}
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -158,14 +153,14 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		return true;
 	}
 
-	//	@Override
-	//	public void onSaveInstanceState(Bundle outState) {
-	//		super.onSaveInstanceState(outState);
-	//		outState.putLong(ARG_LAW_ID, lawId);
-	//		outState.putLong(ARG_PARENT_ID, parentId);
-	//		outState.putString(ARG_LAW_NAME, lawName);
-	//		outState.putSerializable(ARG_PARENT_ID_STACK, parents);
-	//	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putLong(ARG_LAW_ID, lawId);
+		outState.putLong(ARG_PARENT_ID, parentId);
+		outState.putString(ARG_LAW_NAME, lawName);
+		outState.putSerializable(ARG_PARENT_ID_STACK, parents);
+	}
 
 
 }
