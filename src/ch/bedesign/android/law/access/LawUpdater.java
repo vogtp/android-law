@@ -112,12 +112,13 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 	private void updateLaw(ContentResolver resolver, LawModel law) throws ClientProtocolException, IOException {
 
 		Parser lawData = new Parser(ctx, law.getUrl());
+		String lawVersion = lawData.getLawVersion();
 		try {
 			if (System.currentTimeMillis() < law.getLastCheck() + UPDATE_INTERVALL_MILLIES) {
 				Logger.i("Not updating since the law is too new");
 				return;
 			}
-			if (law.getVersion() != null && law.getVersion().equals(lawData.getLawVersion())) {
+			if (law.getVersion() != null && law.getVersion().equals(lawVersion)) {
 				Logger.i("Not updating since the law it has not changed");
 				return;
 			}
@@ -125,14 +126,14 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 			// we do not care
 		}
 
-		Logger.i("Parsing law" + law.getName());
+		Logger.i("Parsing law " + law.getName() + " to version " + lawVersion);
 		lawData.parse();
 		resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
 		insertLawText(lawData, resolver, law);
 
-		Logger.i("Finished parsing law" + law.getName());
+		Logger.i("Finished parsing law " + law.getName() + " to version " + lawVersion);
 		law.setLastCheck(System.currentTimeMillis());
-		law.setVersion(lawData.getLawVersion());
+		law.setVersion(lawVersion);
 		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
 
 	}
