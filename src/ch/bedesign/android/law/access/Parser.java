@@ -71,7 +71,7 @@ public class Parser {
 
 
 	public void parse() throws IOException {
-		Logger.i("Parse law from " + urlText);
+		Logger.v("Parse law from " + urlText);
 		UrlLoader loader = new UrlLoader(context);
 
 		try {

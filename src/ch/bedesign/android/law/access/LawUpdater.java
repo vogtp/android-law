@@ -125,11 +125,12 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 			// we do not care
 		}
 
+		Logger.i("Parsing law" + law.getName());
 		lawData.parse();
 		resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
 		insertLawText(lawData, resolver, law);
 
-		//FIXME only update if update successful
+		Logger.i("Finished parsing law" + law.getName());
 		law.setLastCheck(System.currentTimeMillis());
 		law.setVersion(lawData.getLawVersion());
 		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
