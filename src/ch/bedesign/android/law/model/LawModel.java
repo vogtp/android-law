@@ -113,11 +113,11 @@ public class LawModel {
 		return true;
 	}
 
-	//	public long getIsUpdating() {
-	//		return isUpdating;
-	//	}
-
 	public void setIsUpdating(long isUpdating) {
 		this.isUpdating = isUpdating;
+	}
+
+	public boolean isNotLoaded() {
+		return lastCheck > HOUR_IN_MILLIES;
 	}
 }

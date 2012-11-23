@@ -60,7 +60,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 			if (serializable instanceof Stack<?>) {
 				parents = (Stack<Long>) serializable;
 			} else {
-				String msg = "Something went wrong with the parent IDs";
+				String msg = "Something went wrong with the parent IDs ->" + serializable.getClass().toString();
 				Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
 				Logger.e(msg);
 			}

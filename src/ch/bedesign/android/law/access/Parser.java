@@ -88,7 +88,7 @@ public class Parser {
 
 	}
 
-	private String readArticleStream(InputStream is) {
+	private String readArticleStream(InputStream is) throws IOException {
 		BufferedReader reader = null;
 		try {
 			//-BufferReader mit InputStream erstellen 
@@ -127,10 +127,6 @@ public class Parser {
 
 			return article;
 
-		} catch (Exception e) {
-			Logger.e("error parsing", e);
-			//	e.printStackTrace();
-
 		} finally {
 			try {
 				if (is == null) {
@@ -147,11 +143,9 @@ public class Parser {
 
 			}
 		}
-		return null;
-
 	}
 
-	private String readStream(InputStream is) {
+	private String readStream(InputStream is) throws IOException {
 		BufferedReader reader = null;
 		try {
 			//-BufferReader mit InputStream erstellen 
@@ -188,9 +182,6 @@ public class Parser {
 			//-Exception abfangen     
 			//-String zurückgeben 
 			return sbDetail.toString();
-		} catch (IOException e) {
-			Logger.e("error parsing", e);
-
 		} finally {
 			try {
 				if (is != null) {
@@ -203,7 +194,6 @@ public class Parser {
 				// interssiert niemand
 			}
 		}
-		return null;
 	}
 
 	public String getLawVersion() {
