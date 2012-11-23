@@ -45,7 +45,7 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 					if (law.isUpdating()) {
 						((TextView) v).setText(R.string.msg_updating);
 						return true;
-					} else if (law.isNotLoaded()) {
+					} else if (!law.isLoaded()) {
 						((TextView) v).setText(R.string.msg_law_not_yet_loaded);
 					}
 				}
