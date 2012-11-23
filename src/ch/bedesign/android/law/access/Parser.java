@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import ch.bedesign.android.law.log.Logger;
 
 public class Parser {
@@ -231,6 +232,6 @@ public class Parser {
 				// interssiert niemand
 			}
 		}
-		return null;
+		return DateFormat.getLongDateFormat(context).format(System.currentTimeMillis());
 	}
 }
