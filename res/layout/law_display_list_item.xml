@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="7dp"
-        android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="italic" />
 
@@ -18,6 +17,6 @@
         android:id="@+id/tvLawText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
