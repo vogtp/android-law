@@ -67,4 +67,9 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		return null;
 	}
 
+	public void removePage(int pos) {
+		pages.remove(pos);
+		notifyDataSetChanged();
+	}
+
 }

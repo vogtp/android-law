@@ -50,7 +50,7 @@ public class LawModel {
 		values.put(Laws.NAME_VERSION, version);
 		values.put(Laws.NAME_URL, url);
 		values.put(Laws.NAME_LAST_CHECK, lastCheck);
-		values.put(Laws.NAME_IS_UPDATING, getIsUpdating());
+		values.put(Laws.NAME_IS_UPDATING, isUpdating);
 		return values;
 	}
 
@@ -107,15 +107,15 @@ public class LawModel {
 	}
 
 	public boolean isUpdating() {
-		if (isUpdating < HOUR_IN_MILLIES) {
+		if (System.currentTimeMillis() - isUpdating > HOUR_IN_MILLIES) {
 			return false;
 		}
 		return true;
 	}
 
-	public long getIsUpdating() {
-		return isUpdating;
-	}
+	//	public long getIsUpdating() {
+	//		return isUpdating;
+	//	}
 
 	public void setIsUpdating(long isUpdating) {
 		this.isUpdating = isUpdating;

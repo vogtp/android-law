@@ -1,8 +1,9 @@
 <resources>
 
-    <string name="app_name">de lege lata</string>
+    <string name="app_name">De Lege Lata</string>
     <string name="menu_settings">Settings</string>
     <string name="msg_updating">Updating...</string>
     <string name="msg_law_not_yet_loaded">Tab to load this law</string>
+    <string name="menuClose">Close</string>
 
 </resources>

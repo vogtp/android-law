@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DbInitaliser;
 import ch.bedesign.android.law.model.LawModel;
@@ -26,26 +27,50 @@ public class MainActivity extends FragmentActivity {
 	 */
 	SectionsPagerAdapter sectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+	/**
+	 * The {@link ViewPager} that will host the section contents.
+	 */
 	ViewPager viewPager;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		DbInitaliser.initDb(this);
-        setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);
 		viewPager = (ViewPager) findViewById(R.id.pager);
-			sectionsPagerAdapter = new SectionsPagerAdapter(viewPager, getSupportFragmentManager());
-			viewPager.setAdapter(sectionsPagerAdapter);
-    }
+		sectionsPagerAdapter = new SectionsPagerAdapter(viewPager, getSupportFragmentManager());
+		viewPager.setAdapter(sectionsPagerAdapter);
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.clear();
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.itemClose:
+			closeCurrentFragment();
+			return true;
+
+		case R.id.menu_settings:
+			return true;
+
+		}
+		return false;
+	}
+
+	private void closeCurrentFragment() {
+		int currentItem = viewPager.getCurrentItem();
+		if (currentItem > 0) {
+			viewPager.setCurrentItem(currentItem - 1);
+			sectionsPagerAdapter.removePage(currentItem);
+			viewPager.setAdapter(sectionsPagerAdapter);
+		}
+	}
 
 	@Override
 	public void onBackPressed() {

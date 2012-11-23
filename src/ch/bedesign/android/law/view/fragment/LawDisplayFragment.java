@@ -13,6 +13,8 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setRetainInstance(true);
+		setHasOptionsMenu(true);
 		setListShown(false);
 		getLoaderManager().initLoader(0, null, this);
 		Bundle args;
@@ -162,5 +165,10 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		outState.putSerializable(ARG_PARENT_ID_STACK, parents);
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.list_option, menu);
+	};
 
 }

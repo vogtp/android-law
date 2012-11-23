@@ -60,7 +60,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 					if (c != null && c.moveToFirst()) {
 						law = new LawModel(c);
 						law.setIsUpdating(System.currentTimeMillis());
-						resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toBinaryString(lawId) });
+						resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toString(lawId) });
 						updateLaw(resolver, law);
 					}
 				} catch (Exception e) {
@@ -68,7 +68,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 				} finally {
 					if (law != null) {
 						law.setIsUpdating(-1);
-					resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toBinaryString(lawId) });
+						resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toString(lawId) });
 					}
 				}
 			}
