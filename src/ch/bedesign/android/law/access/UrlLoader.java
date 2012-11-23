@@ -29,6 +29,7 @@ public class UrlLoader {
 
 	public InputStream getStreamFromUrl(String urlStr) throws IOException {
 		if (!cacheExists(urlStr)) {
+			Logger.v("Load url " + urlStr);
 			cacheStream(urlStr);
 		}
 		return getStreamFromCache(urlStr);
