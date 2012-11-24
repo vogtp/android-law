@@ -9,9 +9,10 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.util.TimingLogger;
 import ch.bedesign.android.law.log.Logger;
 
-public class Parser {
+public class Parser implements IParser {
 
 	class LineInfo {
 		private String id; //type long?
@@ -71,12 +72,17 @@ public class Parser {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see ch.bedesign.android.law.access.IParser#parse()
+	 */
 	public void parse() throws IOException {
 		Logger.v("Parse law from " + urlText);
+		TimingLogger timingLogger = new TimingLogger(Logger.TAG, "Parser");
 		UrlLoader loader = new UrlLoader(context);
 
 		try {
 			InputStream in = new BufferedInputStream(loader.getLawStream(urlText));
+			timingLogger.addSplit("Load");
 			if (urlText.indexOf("index") > 0) {
 				readStream(in);
 			}
@@ -86,6 +92,8 @@ public class Parser {
 		} finally {
 			loader.finish();
 		}
+		timingLogger.addSplit("parse");
+		timingLogger.dumpToLog();
 
 	}
 
@@ -197,6 +205,9 @@ public class Parser {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.bedesign.android.law.access.IParser#getLawVersion()
+	 */
 	public String getLawVersion() {
 		UrlLoader loader = new UrlLoader(context);
 		InputStream is = null;

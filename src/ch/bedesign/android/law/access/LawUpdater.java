@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.TimingLogger;
 import ch.bedesign.android.law.access.LawUpdater.LoadResult;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
@@ -77,6 +78,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 	}
 
 	private void insertLawText(Parser lawData, ContentResolver resolver, LawModel law) throws ClientProtocolException, IOException {
+		TimingLogger timingLogger = new TimingLogger(Logger.TAG, "insertLawText");
 		long lawId = law.getId();
 		String SrNr = law.getCode();
 		int i = 0;
@@ -85,6 +87,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
 			Parser lawDataSecondLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawData.data.get(i).getLink());
 			lawDataSecondLevel.parse();
+			timingLogger.addSplit("lawDataSecondLevel");
 			int x = 0;
 
 			while (x < lawDataSecondLevel.data.size()) {
@@ -96,6 +99,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), null, 1));
 					Parser lawDataThirdLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawDataSecondLevel.data.get(x).getLink());
 					lawDataThirdLevel.parse();
+					timingLogger.addSplit("lawDataSecondLevel");
 					int y = 0;
 					while (y < lawDataThirdLevel.data.size()) {
 						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
@@ -107,6 +111,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 			}
 			i++;
 		}
+		timingLogger.dumpToLog();
 	}
 
 	private void updateLaw(ContentResolver resolver, LawModel law) throws ClientProtocolException, IOException {
