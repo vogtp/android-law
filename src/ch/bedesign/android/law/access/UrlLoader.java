@@ -8,11 +8,17 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import android.content.Context;
 import ch.bedesign.android.law.log.Logger;
@@ -84,7 +90,7 @@ public class UrlLoader {
 	private boolean cacheExists(String urlStr) {
 		return getCacheFile(urlStr).exists();
 	}
-
+	
 	private InputStream getStreamFromUrl(String urlStr) throws IOException {
 		if (useUrlConnection) {
 			return getStreamFromUrlConnection(urlStr);
@@ -92,6 +98,7 @@ public class UrlLoader {
 			return getStreamFromHttpClient(urlStr);
 		}
 	}
+
 
 	private InputStream getStreamFromUrlConnection(String urlStr) throws IOException {
 		URL url = new URL(urlStr);
@@ -109,6 +116,26 @@ public class UrlLoader {
 			return entity.getContent();
 		}
 		throw new IOException("No data for " + urlStr);
+	}
+
+	private InputStream getStreamFromDom(String urlStr) throws IOException, Exception {
+
+		try {
+			URL url = new URL("http://www.androidpeople.com/wp-content/uploads/2010/06/example.xml");
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db;
+			db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new InputSource(url.openStream()));
+			doc.getDocumentElement().normalize();
+
+			NodeList nodeList = doc.getElementsByTagName("item");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		return null;
 	}
 
 	public void finish() {

@@ -120,16 +120,11 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		String lawVersion = lawData.getLawVersion();
 		try {
 			if (System.currentTimeMillis() < law.getLastCheck() + UPDATE_INTERVALL_MILLIES) {
-				if (Logger.DEBUG) {
-					Logger.i("Not updating since the law is too new", new Exception());
-				} else {
-					Logger.i("Not updating since the law is too new");
-				}
+				Logger.i("Not updating since the law is too new");
 				return;
 			}
 			if (law.getVersion() != null && law.getVersion().equals(lawVersion)) {
 				Logger.i("Not updating since the law it has not changed");
-				writeLastCheckAndVersionToDB(resolver, law, lawVersion);
 				return;
 			}
 		} catch (Exception e) {
@@ -141,15 +136,11 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 		resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
 		insertLawText(lawData, resolver, law);
 
-		writeLastCheckAndVersionToDB(resolver, law, lawVersion);
-
-	}
-
-	private void writeLastCheckAndVersionToDB(ContentResolver resolver, LawModel law, String lawVersion) {
 		Logger.i("Finished parsing law " + law.getName() + " to version " + lawVersion);
 		law.setLastCheck(System.currentTimeMillis());
 		law.setVersion(lawVersion);
 		resolver.update(Laws.CONTENT_URI, law.getValues(), Laws.SELECTION_CODE, new String[] { law.getCode() });
+
 	}
 
 	private long insert(ContentResolver resolver, EntriesModel entriesModel) {
