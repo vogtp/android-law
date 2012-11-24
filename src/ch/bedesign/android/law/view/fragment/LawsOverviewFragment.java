@@ -1,6 +1,7 @@
 package ch.bedesign.android.law.view.fragment;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -20,6 +21,7 @@ import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
+import ch.bedesign.android.law.db.DB.Laws;
 import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
@@ -134,7 +136,18 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		//		final Uri uri = ContentUris.withAppendedId(DB.VirtualGovernor.CONTENT_URI, info.id);
 		switch (item.getItemId()) {
 		case R.id.itemClearCache:
-			getActivity().getContentResolver().delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(info.id) });
+			ContentResolver resolver = getActivity().getContentResolver();
+			String[] selectionArgs = new String[] { Long.toString(info.id) };
+			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, selectionArgs);
+			Cursor cursor = resolver.query(Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, selectionArgs, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				LawModel law = new LawModel(cursor);
+				law.setVersion(null);
+				law.setIsUpdating(-1);
+				law.setLastCheck(-1);
+				resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, selectionArgs);
+			}
+
 			return true;
 		}
 
