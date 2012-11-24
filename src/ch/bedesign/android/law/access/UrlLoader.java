@@ -97,14 +97,8 @@ public class UrlLoader {
 		} else {
 			return getStreamFromHttpClient(urlStr);
 		}
-
-	private InputStream getStreamFromUrl(String urlStr) throws IOException {
-		if (useUrlConnection) {
-			return getStreamFromUrlConnection(urlStr);
-		} else {
-			return getStreamFromHttpClient(urlStr);
-		}
 	}
+
 
 	private InputStream getStreamFromUrlConnection(String urlStr) throws IOException {
 		URL url = new URL(urlStr);
