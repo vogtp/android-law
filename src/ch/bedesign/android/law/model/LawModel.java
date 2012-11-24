@@ -2,10 +2,14 @@ package ch.bedesign.android.law.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Laws;
 
-public class LawModel {
+public class LawModel implements Parcelable {
+
+	public static final LawModel DUMMY = new LawModel();
 
 	private static final long HOUR_IN_MILLIES = 1000 * 60 * 60;
 	private long id = -1;
@@ -36,7 +40,37 @@ public class LawModel {
 		this.version = c.getString(Laws.INDEX_VERSION);
 		this.url = c.getString(Laws.INDEX_URL);
 		this.lastCheck = c.getLong(Laws.INDEX_LAST_CHECK);
-		this.setIsUpdating(c.getLong(Laws.INDEX_IS_UPDATING));
+		this.isUpdating = c.getLong(Laws.INDEX_IS_UPDATING);
+	}
+
+	public LawModel(Parcel in) {
+		super();
+		this.id = in.readLong();
+		this.code = in.readString();
+		this.name = in.readString();
+		this.countryId = in.readLong();
+		this.version = in.readString();
+		this.url = in.readString();
+		this.lastCheck = in.readLong();
+		this.isUpdating = in.readLong();
+	}
+
+	private LawModel() {
+		this.id = -1;
+		this.code = "none";
+		this.name = "none";
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(id);
+		dest.writeString(code);
+		dest.writeString(name);
+		dest.writeLong(countryId);
+		dest.writeString(version);
+		dest.writeString(url);
+		dest.writeLong(lastCheck);
+		dest.writeLong(isUpdating);
+
 	}
 
 	public ContentValues getValues() {
@@ -52,6 +86,20 @@ public class LawModel {
 		values.put(Laws.NAME_LAST_CHECK, lastCheck);
 		values.put(Laws.NAME_IS_UPDATING, isUpdating);
 		return values;
+	}
+
+	public static final Parcelable.Creator<LawModel> CREATOR = new Parcelable.Creator<LawModel>() {
+		public LawModel createFromParcel(Parcel in) {
+			return new LawModel(in);
+		}
+
+		public LawModel[] newArray(int size) {
+			return new LawModel[size];
+		}
+	};
+
+	public int describeContents() {
+		return 0;
 	}
 
 	public long getId() {
@@ -120,4 +168,5 @@ public class LawModel {
 	public boolean isLoaded() {
 		return lastCheck > HOUR_IN_MILLIES;
 	}
+
 }
