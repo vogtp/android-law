@@ -19,7 +19,6 @@ import android.widget.TextView;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
-import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.activity.MainActivity;
@@ -112,7 +111,7 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		getActivity().getMenuInflater().inflate(R.menu.overview_list_context, menu);
+		//getActivity().getMenuInflater().inflate(R.menu.overview_list_context, menu);
 	}
 
 	@Override
@@ -128,11 +127,11 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		}
 
 		//		final Uri uri = ContentUris.withAppendedId(DB.VirtualGovernor.CONTENT_URI, info.id);
-		switch (item.getItemId()) {
+		/*switch (item.getItemId()) {
 		case R.id.itemClearCache:
 			getActivity().getContentResolver().delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(info.id) });
 			return true;
-		}
+		}*/
 
 		return super.onContextItemSelected(item);
 	}
