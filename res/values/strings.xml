@@ -5,5 +5,6 @@
     <string name="msg_updating">Updating...</string>
     <string name="msg_law_not_yet_loaded">Tab to load this law</string>
     <string name="menuClose">Close</string>
+    <string name="menuItemClearCache">Clear cached law data</string>
 
 </resources>

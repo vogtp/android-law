@@ -9,12 +9,18 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
+import ch.bedesign.android.law.db.DB.Entries;
+import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.activity.MainActivity;
 
@@ -32,6 +38,7 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setRetainInstance(true);
+		setHasOptionsMenu(true);
 		setListShown(false);
 		getLoaderManager().initLoader(0, null, this);
 
@@ -55,6 +62,7 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 			}
 		});
 		setListAdapter(adapter);
+		getListView().setOnCreateContextMenuListener(this);
 	}
 
 	@Override
@@ -99,5 +107,33 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 	
 	public boolean onBackPressed() {
 		return false;
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		getActivity().getMenuInflater().inflate(R.menu.overview_list_context, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		super.onContextItemSelected(item);
+
+		AdapterView.AdapterContextMenuInfo info;
+		try {
+			info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		} catch (ClassCastException e) {
+			Logger.e("bad menuInfo", e);
+			return false;
+		}
+
+		//		final Uri uri = ContentUris.withAppendedId(DB.VirtualGovernor.CONTENT_URI, info.id);
+		switch (item.getItemId()) {
+		case R.id.itemClearCache:
+			getActivity().getContentResolver().delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(info.id) });
+			return true;
+		}
+
+		return super.onContextItemSelected(item);
 	}
 }
