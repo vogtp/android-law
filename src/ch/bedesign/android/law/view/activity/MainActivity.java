@@ -44,7 +44,10 @@ public class MainActivity extends FragmentActivity {
 			getActionBar().setSubtitle("DEBUG MODE" + " (" + SettingsLaw.getInstance(this).getVersionName() + ")");
 		}
 		viewPager = (ViewPager) findViewById(R.id.pager);
+		//		PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_title_strip);
+		//		pagerTabStrip.setDrawFullUnderline(true);
 		sectionsPagerAdapter = new SectionsPagerAdapter(viewPager, getSupportFragmentManager());
+
 		viewPager.setAdapter(sectionsPagerAdapter);
 	}
 
