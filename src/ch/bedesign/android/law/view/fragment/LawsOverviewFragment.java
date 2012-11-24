@@ -20,6 +20,7 @@ import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
+import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.activity.MainActivity;
@@ -52,7 +53,10 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 					LawModel law = new LawModel(c);
 					if (law.isUpdating()) {
 						((TextView) v).setText(R.string.msg_updating);
-						LawUpdater.loadLaw(getActivity(), law.getId());
+						// FIXME move to application
+						if (SettingsLaw.getInstance(getActivity()).isContinueUpdatesAtStartup()) {
+							LawUpdater.loadLaw(getActivity(), law.getId());
+						}
 						return true;
 					} else if (!law.isLoaded()) {
 						((TextView) v).setText(R.string.msg_law_not_yet_loaded);
