@@ -14,15 +14,19 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
+import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 
@@ -83,13 +87,25 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private String lawName;
 	private long parentId = -1;
 	private ParentIdList parentIds = new ParentIdList();
+	private ProgressBar pbWait;
+	private TextView tvTitle;
+	private Cursor entryCursor;
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.law_display_list, container, false);
+		pbWait = (ProgressBar) v.findViewById(R.id.pbWait);
+		tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+		return v;
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
-		setListShown(false);
+		getListView().setVisibility(View.INVISIBLE);
+		pbWait.setVisibility(View.VISIBLE);
 		getLoaderManager().initLoader(0, null, this);
 		Bundle args;
 		if (savedInstanceState != null) {
@@ -181,13 +197,10 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 			return;
 		}
 		adapter.swapCursor(c);
+		entryCursor = c;
 
-		// The list should now be shown.
-		if (isResumed()) {
-			setListShown(true);
-		} else {
-			setListShownNoAnimation(true);
-		}
+		getListView().setVisibility(View.VISIBLE);
+		pbWait.setVisibility(View.INVISIBLE);
 	}
 
 	private long getLastParent() {
@@ -238,4 +251,17 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private String getLawName() {
 		return law.getName();
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		tvTitle.setText(law.getName());
+		if (entryCursor != null && !entryCursor.isClosed() && entryCursor.moveToFirst()) {
+			String fn = entryCursor.getString(Entries.INDEX_FULL_NAME);
+			if (fn != null && !"".equals(fn.trim())) {
+				tvTitle.setText(fn);
+			}
+		}
+	}
+
 }
