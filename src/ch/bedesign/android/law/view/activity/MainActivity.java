@@ -1,5 +1,7 @@
 package ch.bedesign.android.law.view.activity;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -7,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DbInitaliser;
+import ch.bedesign.android.law.helper.SettingsLaw;
+import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.adapter.SectionsPagerAdapter;
 import ch.bedesign.android.law.view.fragment.LawDisplayFragment;
@@ -32,11 +36,15 @@ public class MainActivity extends FragmentActivity {
 	 */
 	ViewPager viewPager;
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DbInitaliser.initDb(this);
 		setContentView(R.layout.activity_main);
+		if (Logger.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			getActionBar().setSubtitle("DEBUG MODE" + " (" + SettingsLaw.getInstance(this).getVersionName() + ")");
+		}
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		sectionsPagerAdapter = new SectionsPagerAdapter(viewPager, getSupportFragmentManager());
 		viewPager.setAdapter(sectionsPagerAdapter);
