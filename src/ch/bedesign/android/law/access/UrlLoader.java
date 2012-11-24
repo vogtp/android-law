@@ -118,4 +118,12 @@ public class UrlLoader {
 		// close the file here
 	}
 
+	public File getFile(String urlStr) {
+		if (!cacheExists(urlStr)) {
+			Logger.v("Load url " + urlStr);
+			cacheStream(urlStr);
+		}
+		return getCacheFile(urlStr);
+	}
+
 }
