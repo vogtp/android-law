@@ -78,7 +78,8 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 						String string = cursor.getString(idx);
 						if (string != null) {
 							Spanned fromHtml = Html.fromHtml(string);
-							((TextView) view).setText(fromHtml);
+							TextView tv = (TextView) view;
+							tv.setText(fromHtml);
 							view.setVisibility(View.VISIBLE);
 							((View) view.getParent()).findViewById(R.id.tvLawTitle).setVisibility(View.GONE);
 							return true;
@@ -89,7 +90,8 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 						String string = cursor.getString(idx);
 						if (string != null) {
 							Spanned fromHtml = Html.fromHtml(string);
-							((TextView) view).setText(fromHtml);
+							TextView tv = (TextView) view;
+							tv.setText(fromHtml);
 							view.setVisibility(View.VISIBLE);
 							((View) view.getParent()).findViewById(R.id.tvLawText).setVisibility(View.GONE);
 							return true;

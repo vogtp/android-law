@@ -117,7 +117,7 @@ public class LawModel {
 		this.isUpdating = isUpdating;
 	}
 
-	public boolean isNotLoaded() {
+	public boolean isLoaded() {
 		return lastCheck > HOUR_IN_MILLIES;
 	}
 }
