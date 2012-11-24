@@ -155,10 +155,13 @@ public class LawModel implements Parcelable {
 	}
 
 	public boolean isUpdating() {
-		if (System.currentTimeMillis() - isUpdating > HOUR_IN_MILLIES) {
+		if (isUpdating < 10) {
 			return false;
 		}
-		return true;
+		if (System.currentTimeMillis() - isUpdating < HOUR_IN_MILLIES) {
+			return true;
+		}
+		return false;
 	}
 
 	public void setIsUpdating(long isUpdating) {
@@ -167,6 +170,11 @@ public class LawModel implements Parcelable {
 
 	public boolean isLoaded() {
 		return lastCheck > HOUR_IN_MILLIES;
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }
