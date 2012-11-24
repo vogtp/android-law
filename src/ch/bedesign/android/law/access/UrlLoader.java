@@ -28,12 +28,22 @@ public class UrlLoader {
 	private HttpURLConnection urlConnection = null;
 	private final Context context;
 
+	//FIXME remove
+	public boolean useUrlConnection = true;
+
 	public UrlLoader(Context context) {
 		super();
 		this.context = context;
 	}
 
-	public InputStream getStreamFromUrl(String urlStr) throws IOException {
+	public InputStream getLawStream(String urlStr) throws IOException {
+		return getLawStream(urlStr, true);
+	}
+
+	public InputStream getLawStream(String urlStr, boolean useCache) throws IOException {
+		if (!useCache) {
+			return getStreamFromUrl(urlStr);
+		}
 		if (!cacheExists(urlStr)) {
 			Logger.v("Load url " + urlStr);
 			cacheStream(urlStr);
@@ -47,20 +57,28 @@ public class UrlLoader {
 
 	private void cacheStream(String urlStr) {
 		InputStream stream;
+		FileOutputStream out = null;
 		try {
-			stream = privateGetStreamFromUrl(urlStr);
-			FileOutputStream out = new FileOutputStream(getCacheFile(urlStr));
+			stream = getStreamFromUrl(urlStr);
+			out = new FileOutputStream(getCacheFile(urlStr));
 			byte buf[] = new byte[16384];
 			do {
 				int numread = stream.read(buf);
 				if (numread <= 0)
 					break;
 				out.write(buf, 0, numread);
-				// ... 
 			} while (true);
 		} catch (IOException e) {
 			Logger.w("Can not cache file", e);
 			getCacheFile(urlStr).delete();
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
 		}
 	}
 
@@ -72,10 +90,20 @@ public class UrlLoader {
 	private boolean cacheExists(String urlStr) {
 		return getCacheFile(urlStr).exists();
 	}
+	
+	private InputStream getStreamFromUrl(String urlStr) throws IOException {
+		if (useUrlConnection) {
+			return getStreamFromUrlConnection(urlStr);
+		} else {
+			return getStreamFromHttpClient(urlStr);
+		}
 
-	public InputStream privateGetStreamFromUrl(String urlStr) throws IOException {
-		return getStreamFromHttpClient(urlStr);
-		//		return getStreamFromHttpClient(urlStr);
+	private InputStream getStreamFromUrl(String urlStr) throws IOException {
+		if (useUrlConnection) {
+			return getStreamFromUrlConnection(urlStr);
+		} else {
+			return getStreamFromHttpClient(urlStr);
+		}
 	}
 
 	private InputStream getStreamFromUrlConnection(String urlStr) throws IOException {

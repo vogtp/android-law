@@ -76,7 +76,7 @@ public class Parser {
 		UrlLoader loader = new UrlLoader(context);
 
 		try {
-			InputStream in = new BufferedInputStream(loader.getStreamFromUrl(urlText));
+			InputStream in = new BufferedInputStream(loader.getLawStream(urlText));
 			if (urlText.indexOf("index") > 0) {
 				readStream(in);
 			}
@@ -202,7 +202,7 @@ public class Parser {
 		InputStream is = null;
 		BufferedReader reader = null;
 		try {
-			is = new BufferedInputStream(loader.getStreamFromUrl(urlText));
+			is = new BufferedInputStream(loader.getLawStream(urlText, false));
 			reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"));
 
 			String line = null;
