@@ -1,6 +1,6 @@
 package ch.bedesign.android.law.view.adapter;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.fragment.ILawFragment;
 import ch.bedesign.android.law.view.fragment.LawDisplayFragment;
@@ -15,7 +16,7 @@ import ch.bedesign.android.law.view.fragment.LawsOverviewFragment;
 
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
-	private final ArrayList<Fragment> pages = new ArrayList<Fragment>();
+	private final LinkedList<Fragment> pages = new LinkedList<Fragment>();
 	private final ViewPager viewPager;
 
 	public SectionsPagerAdapter(ViewPager viewPager, FragmentManager fm) {
@@ -42,20 +43,27 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 	public void addLawDisplay(LawModel lawModel) {
 		Bundle args = new Bundle();
 		Fragment fragment = new LawDisplayFragment();
+		args.putParcelable(LawDisplayFragment.ARG_LAW, lawModel);
 		args.putLong(LawDisplayFragment.ARG_LAW_ID, lawModel.getId());
 		args.putString(LawDisplayFragment.ARG_LAW_NAME, lawModel.getName());
 		fragment.setArguments(args);
-		pages.add(fragment);
+		addFragment(fragment);
+	}
+
+	private void addFragment(Fragment fragment) {
+		int pos = 1;
+		if (SettingsLaw.getInstance().isInsertPageAtEnd()) {
+			pos = pages.size();
+		}
+		pages.add(pos, fragment);
+		viewPager.setCurrentItem(pos, true);
 		notifyDataSetChanged();
-		viewPager.setCurrentItem(pages.size(), true);
 	}
 
 	public void addFromBundle(Bundle args) {
 		Fragment fragment = new LawDisplayFragment();
 		fragment.setArguments(args);
-		pages.add(fragment);
-		notifyDataSetChanged();
-		viewPager.setCurrentItem(pages.size(), true);
+		addFragment(fragment);
 	}
 
 	public boolean onBackPressed(int position) {
