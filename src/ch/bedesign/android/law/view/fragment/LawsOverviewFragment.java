@@ -55,10 +55,6 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 					LawModel law = new LawModel(c);
 					if (law.isUpdating()) {
 						((TextView) v).setText(R.string.msg_updating);
-						// FIXME move to application
-						if (SettingsLaw.getInstance(getActivity()).isContinueUpdatesAtStartup()) {
-							LawUpdater.loadLaw(getActivity(), law.getId());
-						}
 						return true;
 					} else if (!law.isLoaded()) {
 						((TextView) v).setText(R.string.msg_law_not_yet_loaded);
@@ -96,6 +92,15 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 	
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		adapter.swapCursor(c);
+
+		while (c.moveToNext()) {
+			LawModel law = new LawModel(c);
+			if (law.isUpdating()) {
+				if (SettingsLaw.getInstance(getActivity()).isContinueUpdatesAtStartup()) {
+					LawUpdater.loadLaw(getActivity(), law.getId());
+				}
+			}
+		}
 
 		// The list should now be shown.
 		if (isResumed()) {
@@ -142,7 +147,7 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 			Cursor cursor = resolver.query(Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, selectionArgs, null);
 			if (cursor != null && cursor.moveToFirst()) {
 				LawModel law = new LawModel(cursor);
-				law.setVersion(null);
+				law.setVersion(getString(R.string.msg_law_not_yet_loaded));
 				law.setIsUpdating(-1);
 				law.setLastCheck(-1);
 				resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, selectionArgs);
