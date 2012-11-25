@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,20 +22,13 @@ public class MainActivity extends FragmentActivity {
 	private static final String STATE_FRAGMENT = "STATE_FRAGMENT";
 	private static final String STATE_CURRENT_ITEM = "STATE_CURRENT_ITEM";
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	SectionsPagerAdapter sectionsPagerAdapter;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager viewPager;
+	private PagerTabStrip pagerTabStrip;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -45,7 +39,7 @@ public class MainActivity extends FragmentActivity {
 			getActionBar().setSubtitle("DEBUG MODE" + " (" + SettingsLaw.getInstance(this).getVersionName() + ")");
 		}
 		viewPager = (ViewPager) findViewById(R.id.pager);
-		//		PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_title_strip);
+		pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_title_strip);
 		//		pagerTabStrip.setDrawFullUnderline(true);
 		sectionsPagerAdapter = new SectionsPagerAdapter(viewPager, getSupportFragmentManager());
 
@@ -123,6 +117,8 @@ public class MainActivity extends FragmentActivity {
 			sectionsPagerAdapter.addFromBundle(bundle);
 		}
 		viewPager.setCurrentItem(savedInstanceState.getInt(STATE_CURRENT_ITEM));
+		viewPager.getAdapter().notifyDataSetChanged();
+		pagerTabStrip.setTextSpacing(pagerTabStrip.getTextSpacing());
 	}
 
 }
