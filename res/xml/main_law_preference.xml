@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <ListPreference
+        android:entries="@array/prefLanguageEntries"
+        android:entryValues="@array/prefLanguageValues"
+        android:key="@string/prefKeyLanguage"
+        android:summary="@string/prefLanguageLong"
+        android:title="@string/prefLanguage" >
+    </ListPreference>
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/prefKeyInsertPageAtEnd"

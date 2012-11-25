@@ -48,14 +48,24 @@ public class SettingsLaw {
 		return "";
 	}
 
+	private String getStringPreference(int prefKey, String defValue) {
+		return getPreferences().getString(ctx.getString(prefKey), defValue);
+	}
+
 	private boolean getBooleanPreference(int prefKey, boolean defValue) {
 		return getPreferences().getBoolean(ctx.getString(prefKey), defValue);
 	}
+
 	public boolean isContinueUpdatesAtStartup() {
 		return getBooleanPreference(R.string.prefKeyContinueUpdates, true);
 	}
 
 	public boolean isInsertPageAtEnd() {
 		return getBooleanPreference(R.string.prefKeyInsertPageAtEnd, true);
+	}
+
+	public String getLanguage() {
+		// TODO Auto-generated method stub
+		return getStringPreference(R.string.prefKeyLanguage, "");
 	}
 }

@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="app_name">De Lege Lata</string>
     <string name="menu_settings">Settings</string>
     <string name="msg_updating">Updating...</string>
     <string name="msg_law_not_yet_loaded">Tab to load this law</string>
@@ -12,5 +11,8 @@
     <string name="prefInsertPageAtEndOff">At the moment new pages are added in front.</string>
     <string name="prefKeyContinueUpdates">prefKeyContinueUpdates</string>
     <string name="prefContinueUpdates">Continue updates at startup.</string>
+    <string name="prefKeyLanguage">prefKeyLanguage</string>
+    <string name="prefLanguage">Language</string>
+    <string name="prefLanguageLong">Changing the language requires restart of the app.</string>
 
 </resources>
