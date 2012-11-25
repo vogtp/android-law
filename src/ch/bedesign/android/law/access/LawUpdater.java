@@ -5,13 +5,13 @@ import java.text.SimpleDateFormat;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import ch.bedesign.android.law.access.LawUpdater.LoadResult;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.db.DB.Laws;
@@ -19,27 +19,12 @@ import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.EntriesModel;
 import ch.bedesign.android.law.model.LawModel;
 
-public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
+public class LawUpdater extends AsyncTask<Long, Object, Object> {
+	@SuppressLint("SimpleDateFormat")
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
 	private static final long UPDATE_INTERVALL_MILLIES = 1000 * 60 * 60 * 24 * 7; // once a week
 
-	//	public interface LawUpdateCallback {
-	//		public Context getContext();
-	//	}
-
-	public class LoadResult {
-		private boolean ok = false;
-
-		public LoadResult(boolean ok) {
-			super();
-			this.ok = ok;
-		}
-
-	}
-
 	private final Context ctx;
-
-	//	private final LawUpdateCallback callback;
 
 	public LawUpdater(Context ctx) {
 		super();
@@ -47,9 +32,9 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 	}
 
 	@Override
-	protected LoadResult doInBackground(Long... lawIds) {
+	protected Object doInBackground(Long... lawIds) {
 		if (lawIds.length < 1) {
-			return new LoadResult(false);
+			return null;
 		}
 		for (Long lawId : lawIds) {
 			if (lawId != null) {
@@ -70,7 +55,7 @@ public class LawUpdater extends AsyncTask<Long, Object, LoadResult> {
 				}
 			}
 		}
-		return new LoadResult(true);
+		return null;
 	}
 
 	private void updateLaw(ContentResolver resolver, Cursor c) throws ClientProtocolException, IOException {
