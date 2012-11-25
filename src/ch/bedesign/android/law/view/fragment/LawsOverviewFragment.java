@@ -14,6 +14,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.activity.MainActivity;
+import ch.bedesign.android.law.view.widget.DbUpdateProgressBar;
 
 public class LawsOverviewFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
@@ -45,9 +47,9 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		setListShown(false);
 		getLoaderManager().initLoader(0, null, this);
 
-		adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
+		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_overview_list_item, null,
 				new String[] { DB.Laws.NAME_NAME, DB.Laws.NAME_VERSION },
-				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
+				new int[] { R.id.tvLawTitle, R.id.tvInfo }, 0);
 		adapter.setViewBinder(new ViewBinder() {
 
 			public boolean setViewValue(View v, Cursor c, int colIdx) {
@@ -59,6 +61,8 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 					} else if (!law.isLoaded()) {
 						((TextView) v).setText(R.string.msg_law_not_yet_loaded);
 					}
+					DbUpdateProgressBar pb = (DbUpdateProgressBar) ((ViewGroup) v.getParent()).findViewById(R.id.dbUpdateProgressBar);
+					pb.setIsUpdating(law.isUpdating());
 				}
 				return false;
 			}
