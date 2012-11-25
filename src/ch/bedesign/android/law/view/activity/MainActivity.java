@@ -17,9 +17,9 @@ import ch.bedesign.android.law.view.fragment.LawDisplayFragment;
 
 public class MainActivity extends FragmentActivity {
 
-	private static final String STATE_FRAG_COUNT = "stateFragmentCount";
-
-	private static final String STATE_FRAGMENT = "stateFragement";
+	private static final String STATE_FRAG_COUNT = "STATE_FRAG_COUNT";
+	private static final String STATE_FRAGMENT = "STATE_FRAGMENT";
+	private static final String STATE_CURRENT_ITEM = "STATE_CURRENT_ITEM";
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -100,6 +100,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putInt(STATE_CURRENT_ITEM, viewPager.getCurrentItem());
 		int count = sectionsPagerAdapter.getCount();
 		outState.putInt(STATE_FRAG_COUNT, count);
 		for (int i = 1; i < count; i++) {
@@ -121,6 +122,7 @@ public class MainActivity extends FragmentActivity {
 			f.setArguments(bundle);
 			sectionsPagerAdapter.addFromBundle(bundle);
 		}
+		viewPager.setCurrentItem(savedInstanceState.getInt(STATE_CURRENT_ITEM));
 	}
 
 }
