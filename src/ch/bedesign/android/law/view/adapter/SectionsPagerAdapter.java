@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.model.LawModel;
@@ -74,18 +73,13 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		return ((ILawFragment) getItem(position)).onBackPressed();
 	}
 
-	//	@Override
-	//	public Parcelable saveState() {
-	//		return null;
-	//	}
-
 	public void removePage(int pos) {
 		if (pos > 0 && pos < pages.size()) {
 			Fragment fragment = pages.remove(pos);
 			destroyItem(viewPager, pos, fragment);
-			FragmentTransaction transaction = fragmentManager.beginTransaction();
-			transaction.remove(fragment);
-			transaction.commitAllowingStateLoss();
+			//			FragmentTransaction transaction = fragmentManager.beginTransaction();
+			//			transaction.remove(fragment);
+			//			transaction.commitAllowingStateLoss();
 			notifyDataSetChanged();
 		}
 	}
