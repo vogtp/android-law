@@ -255,6 +255,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public void onResume() {
 		super.onResume();
 		tvTitle.setText(lawName);
+		// FIXME does not work here -> breaks listview use partent stack
 		//		if (entryCursor != null && !entryCursor.isClosed() && entryCursor.moveToFirst()) {
 		//			String fn = entryCursor.getString(Entries.INDEX_FULL_NAME);
 		//			if (fn != null && !"".equals(fn.trim())) {
