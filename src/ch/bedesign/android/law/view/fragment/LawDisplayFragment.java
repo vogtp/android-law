@@ -88,7 +88,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private ParentIdList parentIds = new ParentIdList();
 	private DbUpdateProgressBar pbWait;
 	private TextView tvTitle;
-	private Cursor entryCursor;
 
 
 	@Override
@@ -203,7 +202,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 			return;
 		}
 		adapter.swapCursor(c);
-		entryCursor = c;
 
 		getListView().setVisibility(View.VISIBLE);
 		pbWait.setVisibility(View.INVISIBLE);
