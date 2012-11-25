@@ -3,6 +3,7 @@ package ch.bedesign.android.law.view.widget;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -13,7 +14,16 @@ import ch.bedesign.android.law.model.LawModel;
 
 public class DbUpdateProgressBar extends ProgressBar {
 
-	private final ContentObserver observer = new ContentObserver(null) {
+	class LawUpdateContentObserver extends ContentObserver {
+
+		public LawUpdateContentObserver(Handler handler) {
+			super(handler);
+		}
+
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -52,7 +62,8 @@ public class DbUpdateProgressBar extends ProgressBar {
 		this.dbId = id;
 		this.selectionArgs = new String[] {Long.toString(dbId)};
 		evaluateState();
-		getContext().getContentResolver().registerContentObserver(Laws.CONTENT_URI, true, observer);
+		getContext().getContentResolver().registerContentObserver(Laws.CONTENT_URI, false, new LawUpdateContentObserver(null));
+		//		getContext().getContentResolver().notifyChange(Laws.CONTENT_URI, new LawUpdateContentObserver(new Handler()));
 	}
 
 	private void evaluateState() {
@@ -75,7 +86,16 @@ public class DbUpdateProgressBar extends ProgressBar {
 	}
 
 	public void setIsUpdating(boolean updating) {
-		setVisibility(updating ? View.VISIBLE : View.GONE);
+		super.setVisibility(updating ? View.VISIBLE : View.GONE);
+	}
+
+	@Override
+	public void setVisibility(int v) {
+		if (dbId > -1) {
+			evaluateState();
+		} else {
+			super.setVisibility(v);
+		}
 	}
 
 }

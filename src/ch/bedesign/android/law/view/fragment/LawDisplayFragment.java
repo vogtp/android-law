@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import ch.bedesign.android.law.R;
@@ -28,6 +27,7 @@ import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
+import ch.bedesign.android.law.view.widget.DbUpdateProgressBar;
 
 public class LawDisplayFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
@@ -86,14 +86,14 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private String lawName;
 	private long parentId = -1;
 	private ParentIdList parentIds = new ParentIdList();
-	private ProgressBar pbWait;
+	private DbUpdateProgressBar pbWait;
 	private TextView tvTitle;
 	private Cursor entryCursor;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.law_display_list, container, false);
-		pbWait = (ProgressBar) v.findViewById(R.id.pbWait);
+		pbWait = (DbUpdateProgressBar) v.findViewById(R.id.pbWait);
 		tvTitle = (TextView) v.findViewById(R.id.tvTitle);
 		return v;
 	}
@@ -169,6 +169,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		};
 		adapter.setViewBinder(binder);
 		setListAdapter(adapter);
+		pbWait.listenForChange(law.getId());
 	}
 
 	@Override

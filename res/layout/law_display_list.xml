@@ -23,7 +23,7 @@
             android:background="@android:color/black" >
         </ListView>
 
-        <ProgressBar
+        <ch.bedesign.android.law.view.widget.DbUpdateProgressBar
             android:id="@+id/pbWait"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
