@@ -104,7 +104,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		setHasOptionsMenu(true);
 		getListView().setVisibility(View.INVISIBLE);
 		pbWait.setVisibility(View.VISIBLE);
-		getLoaderManager().initLoader(0, null, this);
 		Bundle args = getArguments();
 		law = (LawModel) args.getParcelable(ARG_LAW);
 		if (savedInstanceState != null && law == null) {
@@ -169,6 +168,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		};
 		adapter.setViewBinder(binder);
 		setListAdapter(adapter);
+		getLoaderManager().initLoader(0, null, this);
 		pbWait.listenForChange(law.getId());
 	}
 
