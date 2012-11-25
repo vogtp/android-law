@@ -75,15 +75,11 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		};
 	}
 
-	public static final String ARG_LAW_ID = "lawId";
-	public static final String ARG_LAW_NAME = "lawName";
 	public static final String ARG_LAW = "lawParcel";
 	private static final String ARG_PARENT_ID = "parentId";
 	private static final String ARG_PARENT_ID_STACK = "parentIdStack";
 	private SimpleCursorAdapter adapter;
 	private LawModel law = LawModel.DUMMY;
-	private long lawId;
-	private String lawName;
 	private long parentId = -1;
 	private ParentIdList parentIds = new ParentIdList();
 	private DbUpdateProgressBar pbWait;
@@ -102,8 +98,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		if (law == null) {
 			law = LawModel.DUMMY;
 		}
-		lawId = args.getLong(ARG_LAW_ID);
-		lawName = args.getString(ARG_LAW_NAME);
 		if (args.containsKey(ARG_PARENT_ID)) {
 			parentId = args.getLong(ARG_PARENT_ID);
 			Logger.v("got parentID=" + parentId);
@@ -231,9 +225,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(ARG_LAW, law);
-		outState.putLong(ARG_LAW_ID, getLawId());
 		outState.putLong(ARG_PARENT_ID, parentId);
-		outState.putString(ARG_LAW_NAME, getLawName());
 		outState.putParcelable(ARG_PARENT_ID_STACK, parentIds);
 	}
 
@@ -249,19 +241,17 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	}
 
 	private Long getLawId() {
-		//		return law.getId();
-		return lawId;
+		return law.getId();
 	}
 
 	private String getLawName() {
-		//		return law.getName();
-		return lawName;
+		return law.getName();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		tvTitle.setText(lawName);
+		tvTitle.setText(getLawName());
 		// FIXME does not work here -> breaks listview use partent stack
 		//		if (entryCursor != null && !entryCursor.isClosed() && entryCursor.moveToFirst()) {
 		//			String fn = entryCursor.getString(Entries.INDEX_FULL_NAME);
