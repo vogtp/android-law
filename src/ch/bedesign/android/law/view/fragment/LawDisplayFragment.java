@@ -90,20 +90,10 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private TextView tvTitle;
 	private Cursor entryCursor;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.law_display_list, container, false);
-		pbWait = (DbUpdateProgressBar) v.findViewById(R.id.pbWait);
-		tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-		return v;
-	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setHasOptionsMenu(true);
-		getListView().setVisibility(View.INVISIBLE);
-		pbWait.setVisibility(View.VISIBLE);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		law = (LawModel) args.getParcelable(ARG_LAW);
 		if (savedInstanceState != null && law == null) {
@@ -129,7 +119,24 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 				Logger.e(msg);
 			}
 		}
-		LawUpdater.loadLaw(getActivity().getApplicationContext(), getLawId());
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.law_display_list, container, false);
+		pbWait = (DbUpdateProgressBar) v.findViewById(R.id.pbWait);
+		tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+		return v;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setHasOptionsMenu(true);
+		getListView().setVisibility(View.INVISIBLE);
+		pbWait.setVisibility(View.VISIBLE);
+
+		LawUpdater.loadLaw(getActivity(), getLawId());
 
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_display_list_item, null,
 				new String[] { DB.Entries.NAME_SHORT_NAME, DB.Entries.NAME_TEXT },
