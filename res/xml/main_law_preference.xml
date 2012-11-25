@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/prefKeyInsertPageAtEnd"
+        android:summaryOff="@string/prefInsertPageAtEndOff"
+        android:summaryOn="@string/prefInsertPageAtEndOn"
+        android:title="@string/prefInsertPageAtEnd" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/prefKeyContinueUpdates"
+        android:title="@string/prefContinueUpdates" />
+
+</PreferenceScreen>
