@@ -62,33 +62,31 @@ public class LawUpdater extends AsyncTask<Long, Object, Object> {
 		LawModel law = new LawModel(c);
 		Parser lawData = new Parser(ctx, law.getUrl());
 		String lawVersion = lawData.getLawVersion();
+		long now = System.currentTimeMillis();
 		try {
-			if (System.currentTimeMillis() < law.getLastCheck() + UPDATE_INTERVALL_MILLIES) {
+			if (now < law.getLastCheck() + UPDATE_INTERVALL_MILLIES) {
 				Logger.i("Not updating since the law is too new");
 				return;
 			}
-			if (law.getVersion() != null && law.getVersion().equals(lawVersion)) {
-				Logger.i("Not updating since the law it has not changed");
-				return;
-			}
+
 		} catch (Exception e) {
 			// we do not care
 		}
 		try {
+			if (law.getVersion() != null && !law.getVersion().equals(lawVersion)) {
+				law.setIsUpdating(now);
+				resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toString(law.getId()) });
 
-			law.setIsUpdating(System.currentTimeMillis());
-			resolver.update(Laws.CONTENT_URI, law.getValues(), DB.SELECTION_BY_ID, new String[] { Long.toString(law.getId()) });
+				Logger.i("Parsing law " + law.getName() + " to version " + lawVersion);
+				long start = now;
+				lawData.parse();
+				resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
+				insertLawText(lawData, resolver, law);
 
-			Logger.i("Parsing law " + law.getName() + " to version " + lawVersion);
-			long start = System.currentTimeMillis();
-			lawData.parse();
-			resolver.delete(Entries.CONTENT_URI, Entries.SELECTION_LAW, new String[] { Long.toString(law.getId()) });
-			insertLawText(lawData, resolver, law);
-
-
-			Logger.i("Finished parsing law " + law.getName() + " to version " + lawVersion + " in " + sdf.format(System.currentTimeMillis() - start));
-			law.setLastCheck(System.currentTimeMillis());
-			law.setVersion(lawVersion);
+				Logger.i("Finished parsing law " + law.getName() + " to version " + lawVersion + " in " + sdf.format(now - start));
+				law.setVersion(lawVersion);
+			}
+			law.setLastCheck(now);
 		} finally {
 			law.setIsUpdating(-1);
 		}
