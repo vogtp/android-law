@@ -191,6 +191,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		if (c == null || c.getCount() < 1) {
+			parentId = getLastParent();
 			getLoaderManager().restartLoader(0, null, this);
 			return;
 		}
