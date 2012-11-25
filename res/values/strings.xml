@@ -6,5 +6,11 @@
     <string name="msg_law_not_yet_loaded">Tab to load this law</string>
     <string name="menuClose">Close</string>
     <string name="menuItemClearCache">Clear cached law data</string>
+    <string name="prefKeyInsertPageAtEnd">prefKeyInsertPageAtEnd</string>
+    <string name="prefInsertPageAtEnd">Insert new pages at the end.</string>
+    <string name="prefInsertPageAtEndOn">At the moment new pages are added to the end.</string>
+    <string name="prefInsertPageAtEndOff">At the moment new pages are added in front.</string>
+    <string name="prefKeyContinueUpdates">prefKeyContinueUpdates</string>
+    <string name="prefContinueUpdates">Continue updates at startup.</string>
 
 </resources>

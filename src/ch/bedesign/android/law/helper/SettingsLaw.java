@@ -1,8 +1,11 @@
 package ch.bedesign.android.law.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.preference.PreferenceManager;
+import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.log.Logger;
 
 public class SettingsLaw {
@@ -10,7 +13,6 @@ public class SettingsLaw {
 	private static SettingsLaw instance = null;
 	private final Context ctx;
 
-	
 	public static SettingsLaw getInstance(Context ctx) {
 		if (instance == null) {
 			instance = new SettingsLaw(ctx);
@@ -28,10 +30,13 @@ public class SettingsLaw {
 		this.ctx = context.getApplicationContext();
 	}
 
-	public boolean isInsertPageAtEnd() {
-		// FIXME not yet working
-		return true;
+	protected SharedPreferences getPreferences() {
+		return PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
+
+	//	private SharedPreferences getLocalPreferences() {
+	//		return context.getSharedPreferences(PREF_STORE_LOCAL, 0);
+	//	}
 
 	public String getVersionName() {
 		try {
@@ -43,8 +48,14 @@ public class SettingsLaw {
 		return "";
 	}
 
+	private boolean getBooleanPreference(int prefKey, boolean defValue) {
+		return getPreferences().getBoolean(ctx.getString(prefKey), defValue);
+	}
 	public boolean isContinueUpdatesAtStartup() {
-		// TODO Auto-generated method stub
-		return true;
+		return getBooleanPreference(R.string.prefKeyContinueUpdates, true);
+	}
+
+	public boolean isInsertPageAtEnd() {
+		return getBooleanPreference(R.string.prefKeyInsertPageAtEnd, true);
 	}
 }

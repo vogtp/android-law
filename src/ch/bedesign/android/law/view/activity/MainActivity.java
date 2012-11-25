@@ -1,6 +1,7 @@
 package ch.bedesign.android.law.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -66,6 +67,7 @@ public class MainActivity extends FragmentActivity {
 			return true;
 
 		case R.id.menu_settings:
+			startActivity(new Intent(this, LawPreference.class));
 			return true;
 
 		}

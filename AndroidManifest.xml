@@ -28,6 +28,9 @@
             android:authorities="ch.bedesign.android.law"
             android:exported="false" >
         </provider>
+
+        <activity android:name=".view.activity.LawPreference" >
+        </activity>
     </application>
 
 </manifest>
