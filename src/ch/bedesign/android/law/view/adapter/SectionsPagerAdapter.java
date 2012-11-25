@@ -3,10 +3,10 @@ package ch.bedesign.android.law.view.adapter;
 import java.util.LinkedList;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.model.LawModel;
@@ -18,10 +18,13 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 	private final LinkedList<Fragment> pages = new LinkedList<Fragment>();
 	private final ViewPager viewPager;
+	private final FragmentManager fragmentManager;
 
 	public SectionsPagerAdapter(ViewPager viewPager, FragmentManager fm) {
 		super(fm);
+		this.fragmentManager = fm;
 		this.viewPager = viewPager;
+		pages.clear();
 		pages.add(0, new LawsOverviewFragment());
 	}
 
@@ -63,6 +66,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 	public void addFromBundle(Bundle args) {
 		Fragment fragment = new LawDisplayFragment();
 		fragment.setArguments(args);
+		fragment.setInitialSavedState(null);
 		addFragment(fragment);
 	}
 
@@ -70,14 +74,25 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		return ((ILawFragment) getItem(position)).onBackPressed();
 	}
 
-	@Override
-	public Parcelable saveState() {
-		return null;
-	}
+	//	@Override
+	//	public Parcelable saveState() {
+	//		return null;
+	//	}
 
 	public void removePage(int pos) {
-		pages.remove(pos);
-		notifyDataSetChanged();
+		if (pos > 0 && pos < pages.size()) {
+			Fragment fragment = pages.remove(pos);
+			destroyItem(viewPager, pos, fragment);
+			FragmentTransaction transaction = fragmentManager.beginTransaction();
+			transaction.remove(fragment);
+			transaction.commitAllowingStateLoss();
+			notifyDataSetChanged();
+		}
+	}
+
+	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
 	}
 
 }

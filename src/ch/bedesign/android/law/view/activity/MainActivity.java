@@ -75,6 +75,9 @@ public class MainActivity extends FragmentActivity {
 	private void closeCurrentFragment() {
 		int currentItem = viewPager.getCurrentItem();
 		if (currentItem > 0) {
+
+			//			sectionsPagerAdapter.destroyItem(viewPager, currentItem, viewPager.getChildAt(currentItem));
+			//			viewPager.removeViewAt(currentItem);
 			viewPager.setCurrentItem(currentItem - 1);
 			sectionsPagerAdapter.removePage(currentItem);
 			viewPager.setAdapter(sectionsPagerAdapter);

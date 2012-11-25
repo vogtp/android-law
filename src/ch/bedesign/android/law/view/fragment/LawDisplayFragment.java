@@ -26,7 +26,6 @@ import android.widget.Toast;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
-import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 
@@ -102,18 +101,16 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setRetainInstance(true);
 		setHasOptionsMenu(true);
 		getListView().setVisibility(View.INVISIBLE);
 		pbWait.setVisibility(View.VISIBLE);
 		getLoaderManager().initLoader(0, null, this);
-		Bundle args;
-		if (savedInstanceState != null) {
-			args = savedInstanceState;
-		} else {
-			args = getArguments();
-		}
+		Bundle args = getArguments();
 		law = (LawModel) args.getParcelable(ARG_LAW);
+		if (savedInstanceState != null && law == null) {
+			args = savedInstanceState;
+			law = (LawModel) args.getParcelable(ARG_LAW);
+		}
 		if (law == null) {
 			law = LawModel.DUMMY;
 		}
@@ -245,23 +242,25 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	}
 
 	private Long getLawId() {
-		return law.getId();
+		//		return law.getId();
+		return lawId;
 	}
 
 	private String getLawName() {
-		return law.getName();
+		//		return law.getName();
+		return lawName;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		tvTitle.setText(law.getName());
-		if (entryCursor != null && !entryCursor.isClosed() && entryCursor.moveToFirst()) {
-			String fn = entryCursor.getString(Entries.INDEX_FULL_NAME);
-			if (fn != null && !"".equals(fn.trim())) {
-				tvTitle.setText(fn);
-			}
-		}
+		tvTitle.setText(lawName);
+		//		if (entryCursor != null && !entryCursor.isClosed() && entryCursor.moveToFirst()) {
+		//			String fn = entryCursor.getString(Entries.INDEX_FULL_NAME);
+		//			if (fn != null && !"".equals(fn.trim())) {
+		//				tvTitle.setText(Html.fromHtml(fn));
+		//			}
+		//		}
 	}
 
 }
