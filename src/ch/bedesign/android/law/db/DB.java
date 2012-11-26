@@ -121,8 +121,7 @@ public interface DB {
 		public static final int INDEX_LAST_CHECK = 6;
 		public static final int INDEX_IS_UPDATING = 7;
 
-		public static final String[] colNames = new String[] { NAME_ID, NAME_CODE, NAME_NAME, NAME_COUNTRY_ID, NAME_VERSION, NAME_URL, NAME_LAST_CHECK, NAME_IS_UPDATING };
-		public static final String[] PROJECTION_DEFAULT = colNames;
+		public static final String[] PROJECTION_DEFAULT = new String[] { NAME_ID, NAME_CODE, NAME_NAME, NAME_COUNTRY_ID, NAME_VERSION, NAME_URL, NAME_LAST_CHECK, NAME_IS_UPDATING };
 
 		public static final String SORTORDER_DEFAULT = NAME_NAME + " DESC";
 		public static final String SORTORDER_REVERSE = NAME_NAME + " ASC";
@@ -167,8 +166,7 @@ public interface DB {
 		public static final int INDEX_TEXT = 5;
 		public static final int INDEX_SEQUENCE = 6;
 
-		public static final String[] colNames = new String[] { NAME_ID, NAME_LAW_ID, NAME_SHORT_NAME, NAME_FULL_NAME, NAME_PARENT_ID, NAME_TEXT, NAME_SEQUENCE };
-		public static final String[] PROJECTION_DEFAULT = colNames;
+		public static final String[] PROJECTION_DEFAULT = new String[] { NAME_ID, NAME_LAW_ID, NAME_SHORT_NAME, NAME_FULL_NAME, NAME_PARENT_ID, NAME_TEXT, NAME_SEQUENCE };
 
 		public static final String SORTORDER_DEFAULT = NAME_SEQUENCE + " ASC";
 		public static final String SORTORDER_REVERSE = NAME_SEQUENCE + " DESC";
@@ -182,54 +180,4 @@ public interface DB {
 		static final String SELECTION_LAW_PARENT = NAME_LAW_ID + "=? and " + NAME_PARENT_ID + "=?";
 
 	}
-	/*
-		public interface Sections {
-			static final String TABLE_NAME = "sections";
-			public static final String CONTENT_ITEM_NAME = "section";
-
-			public static final String NAME_LAW_ID = "lawId";
-			public static final String NAME_NAME = "name";
-
-			public static final int INDEX_LAW_ID = 1;
-			public static final int INDEX_NAME = 2;
-
-			public static final String[] colNames = new String[] { NAME_ID, NAME_LAW_ID, NAME_NAME };
-			public static final String[] PROJECTION_DEFAULT = colNames;
-
-			public static final String SORTORDER_DEFAULT = NAME_NAME + " DESC";
-			public static final String SORTORDER_REVERSE = NAME_NAME + " ASC";
-
-			public static final String CONTENT_URI_STRING = "content://" + AUTHORITY + "/" + CONTENT_ITEM_NAME;
-			public static final Uri CONTENT_URI = Uri.parse(CONTENT_URI_STRING);
-			static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + AUTHORITY + "." + CONTENT_ITEM_NAME;
-			static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY + "." + CONTENT_ITEM_NAME;
-			public static final UriTableMapping URI_TABLE_MAPPING = new UriTableMapping(CONTENT_URI, TABLE_NAME, CONTENT_ITEM_NAME, CONTENT_TYPE, CONTENT_ITEM_TYPE);
-
-		}
-
-		public interface Articles {
-			static final String TABLE_NAME = "articles";
-			public static final String CONTENT_ITEM_NAME = "articles";
-
-			public static final String NAME_SECTION_ID = "sectionId";
-			public static final String NAME_NAME = "name";
-
-			public static final int INDEX_LAW_ID = 1;
-			public static final int INDEX_SECTION_ID = 2;
-			public static final int INDEX_NAME = 3;
-
-			public static final String[] colNames = new String[] { NAME_ID, NAME_SECTION_ID, NAME_NAME };
-			public static final String[] PROJECTION_DEFAULT = colNames;
-
-			public static final String SORTORDER_DEFAULT = NAME_NAME + " DESC";
-			public static final String SORTORDER_REVERSE = NAME_NAME + " ASC";
-
-			public static final String CONTENT_URI_STRING = "content://" + AUTHORITY + "/" + CONTENT_ITEM_NAME;
-			public static final Uri CONTENT_URI = Uri.parse(CONTENT_URI_STRING);
-			static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + AUTHORITY + "." + CONTENT_ITEM_NAME;
-			static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY + "." + CONTENT_ITEM_NAME;
-			public static final UriTableMapping URI_TABLE_MAPPING = new UriTableMapping(CONTENT_URI, TABLE_NAME, CONTENT_ITEM_NAME, CONTENT_TYPE, CONTENT_ITEM_TYPE);
-
-		}
-		*/
 }
