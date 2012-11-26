@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.helper.SettingsLaw;
@@ -14,9 +14,10 @@ import ch.bedesign.android.law.view.fragment.ILawFragment;
 import ch.bedesign.android.law.view.fragment.LawDisplayFragment;
 import ch.bedesign.android.law.view.fragment.LawsOverviewFragment;
 
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 	private final LinkedList<Fragment> pages = new LinkedList<Fragment>();
+	private final LinkedList<String> names = new LinkedList<String>();
 	private final ViewPager viewPager;
 	private final FragmentManager fragmentManager;
 
@@ -24,8 +25,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		super(fm);
 		this.viewPager = viewPager;
 		this.fragmentManager = fm;
-		pages.clear();
-		pages.add(0, new LawsOverviewFragment());
+		LawsOverviewFragment lawsOverviewFragment = new LawsOverviewFragment();
+		pages.add(0, lawsOverviewFragment);
+		names.add(0, lawsOverviewFragment.getName());
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		return ((ILawFragment) getItem(position)).getName();
+		return names.get(position);
 	}
 
 	public void addLawDisplay(LawModel lawModel) {
@@ -48,15 +50,16 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		Fragment fragment = new LawDisplayFragment();
 		args.putParcelable(LawDisplayFragment.ARG_LAW, lawModel);
 		fragment.setArguments(args);
-		addFragment(fragment);
+		addFragment(fragment, lawModel.getName());
 	}
 
-	private void addFragment(Fragment fragment) {
+	private void addFragment(Fragment fragment, String name) {
 		int pos = 1;
 		if (SettingsLaw.getInstance().isInsertPageAtEnd()) {
 			pos = pages.size();
 		}
 		pages.add(pos, fragment);
+		names.add(pos, name);
 		viewPager.setCurrentItem(pos, true);
 		notifyDataSetChanged();
 	}
@@ -65,24 +68,28 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		Fragment fragment = new LawDisplayFragment();
 		fragment.setArguments(args);
 		fragment.setInitialSavedState(null);
-		addFragment(fragment);
+		addFragment(fragment, ((LawModel) args.getParcelable(LawDisplayFragment.ARG_LAW)).getName());
 	}
 
 	public boolean onBackPressed() {
-		return ((ILawFragment) getCurrentItem()).onBackPressed();
+		return ((ILawFragment) getCurrentFragment()).onBackPressed();
 	}
 
 	public void removePage(int pos) {
 		if (pos > 0 && pos < pages.size()) {
 			Fragment fragment = pages.remove(pos);
+			names.remove(pos);
 			destroyItem(viewPager, pos, fragment);
 			notifyDataSetChanged();
 		}
 	}
 
-	public Fragment getCurrentItem() {
-		Fragment fragment = fragmentManager.findFragmentByTag(
-						"android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
+	public Fragment getCurrentFragment() {
+		return getFragmentAtPos(viewPager.getCurrentItem());
+	}
+
+	public Fragment getFragmentAtPos(int pos) {
+		Fragment fragment = fragmentManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + pos);
 		return fragment;
 	}
 
