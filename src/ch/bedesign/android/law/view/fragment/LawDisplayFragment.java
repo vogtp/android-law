@@ -27,7 +27,7 @@ import ch.bedesign.android.law.view.widget.DbUpdateProgressBar;
 public class LawDisplayFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
 	public static final String ARG_LAW = "lawParcel";
-	private static final String ARG_PARENT_ID = "parentId";
+	public static final String ARG_PARENT_ID = "parentId";
 
 	private static final int LOADER_ENTRIES_LIST = 1;
 	private static final int LOADER_GET_PARTENTID = 2;

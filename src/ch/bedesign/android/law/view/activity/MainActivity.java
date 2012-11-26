@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,6 +41,7 @@ public class MainActivity extends FragmentActivity {
 	ViewPager viewPager;
 	private PagerTabStrip pagerTabStrip;
 	private int currentItem = -1;
+	private BroadcastReceiver searchResultReceiver;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -81,6 +85,21 @@ public class MainActivity extends FragmentActivity {
 			viewPager.setCurrentItem(currentItem);
 			currentItem = -1;
 		}
+		IntentFilter displaySearchResult = new IntentFilter(SearchFragment.ACTION_DISPLAY_SEARCH_RESULTS);
+		searchResultReceiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				addLawDisplayFragment(intent.getExtras());
+			}
+		};
+		registerReceiver(searchResultReceiver , displaySearchResult);
+	}
+
+	@Override
+	protected void onPause() {
+		unregisterReceiver(searchResultReceiver);
+		super.onPause();
 	}
 
 	@Override
@@ -188,9 +207,7 @@ public class MainActivity extends FragmentActivity {
 			Bundle fragmentBundle = bundle.getBundle(key);
 			String fragmentClassName = bundle.getString(key + FRAGMENT_CLASS_NAME);
 			if (LawDisplayFragment.class.getName().equals(fragmentClassName)) {
-				LawDisplayFragment f = new LawDisplayFragment();
-				f.setArguments(fragmentBundle);
-				sectionsPagerAdapter.addFragment(f, ((LawModel) fragmentBundle.getParcelable(LawDisplayFragment.ARG_LAW)).getName());
+				addLawDisplayFragment(fragmentBundle);
 			} else if (SearchFragment.class.getName().equals(fragmentClassName)) {
 				SearchFragment f = new SearchFragment();
 				f.setArguments(fragmentBundle);
@@ -201,6 +218,12 @@ public class MainActivity extends FragmentActivity {
 		viewPager.setCurrentItem(bundle.getInt(STATE_CURRENT_ITEM));
 		viewPager.getAdapter().notifyDataSetChanged();
 		pagerTabStrip.setTextSpacing(pagerTabStrip.getTextSpacing());
+	}
+
+	private void addLawDisplayFragment(Bundle bundle) {
+		LawDisplayFragment f = new LawDisplayFragment();
+		f.setArguments(bundle);
+		sectionsPagerAdapter.addFragment(f, ((LawModel) bundle.getParcelable(LawDisplayFragment.ARG_LAW)).getName());
 	}
 
 }

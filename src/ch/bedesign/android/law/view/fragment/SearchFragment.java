@@ -1,6 +1,7 @@
 package ch.bedesign.android.law.view.fragment;
 
 import android.app.SearchManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -11,15 +12,19 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.text.Html;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
+import ch.bedesign.android.law.db.DB.Laws;
+import ch.bedesign.android.law.model.LawModel;
 
 public class SearchFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
 	private static final int QUERY_EXACT = 1;
 	private static final int QUERY_INEXACT = 2;
+	public static final String ACTION_DISPLAY_SEARCH_RESULTS = "ACTION_DISPLAY_SEARCH_RESULTS";
 	private String searchQuery;
 	private SimpleCursorAdapter adapter;
 
@@ -98,6 +103,26 @@ public class SearchFragment extends ListFragment implements ILawFragment, Loader
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(SearchManager.QUERY, searchQuery);
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		CursorLoader entriesCursorLoader = new CursorLoader(getActivity(), Entries.CONTENT_URI, Entries.PROJECTION_DEFAULT, DB.SELECTION_BY_ID,
+				new String[] { Long.toString(id) }, null);
+		Cursor entriesCursor = entriesCursorLoader.loadInBackground();
+		if (entriesCursor.moveToFirst()) {
+			CursorLoader lawCursorLoader = new CursorLoader(getActivity(), Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID,
+					new String[] { Long.toString(entriesCursor.getLong(Entries.INDEX_LAW_ID)) }, null);
+			Cursor lawCursor = lawCursorLoader.loadInBackground();
+			if (lawCursor.moveToFirst()) {
+				LawModel law = new LawModel(lawCursor);
+				Intent intent = new Intent(ACTION_DISPLAY_SEARCH_RESULTS);
+				intent.putExtra(LawDisplayFragment.ARG_LAW, law);
+				intent.putExtra(LawDisplayFragment.ARG_PARENT_ID, entriesCursor.getLong(Entries.INDEX_PARENT_ID));
+				getActivity().sendBroadcast(intent);
+			}
+		}
 	}
 
 }
