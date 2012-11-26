@@ -67,7 +67,11 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 
 	public boolean onBackPressed() {
-		return ((ILawFragment) getCurrentFragment()).onBackPressed();
+		ILawFragment fragment = (ILawFragment) getCurrentFragment();
+		if (fragment != null) {
+			return fragment.onBackPressed();
+		}
+		return false;
 	}
 
 	public void removePage(int pos) {
