@@ -89,6 +89,9 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 	public Fragment getFragmentAtPos(int pos) {
 		Fragment fragment = fragmentManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + pos);
+		if (fragment == null) {
+			fragment = getItem(pos);
+		}
 		return fragment;
 	}
 
