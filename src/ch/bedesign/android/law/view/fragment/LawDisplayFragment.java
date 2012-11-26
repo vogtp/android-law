@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.access.LawUpdater;
 import ch.bedesign.android.law.db.DB;
@@ -77,14 +76,16 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 
 	public static final String ARG_LAW = "lawParcel";
 	private static final String ARG_PARENT_ID = "parentId";
-	private static final String ARG_PARENT_ID_STACK = "parentIdStack";
+
+	private static final int LOADER_ENTRIES_LIST = 1;
+	private static final int LOADER_GET_PARTENTID = 2;
+
 	private SimpleCursorAdapter adapter;
 	private LawModel law = LawModel.DUMMY;
 	private long parentId = -1;
-	private ParentIdList parentIds = new ParentIdList();
+	private long oldParentId = -1;
 	private DbUpdateProgressBar pbWait;
 	private TextView tvTitle;
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,16 +102,8 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		if (args.containsKey(ARG_PARENT_ID)) {
 			parentId = args.getLong(ARG_PARENT_ID);
 			Logger.v("got parentID=" + parentId);
-		}
-		if (args.containsKey(ARG_PARENT_ID_STACK)) {
-			Parcelable parcel = args.getParcelable(ARG_PARENT_ID_STACK);
-			if (parcel instanceof ParentIdList) {
-				parentIds = (ParentIdList) parcel;
-			} else {
-				String msg = "Something went wrong with the parent IDs ->" + parcel.getClass().toString();
-				Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-				Logger.e(msg);
-			}
+		} else if (savedInstanceState != null && savedInstanceState.containsKey(ARG_PARENT_ID)) {
+			parentId = savedInstanceState.getLong(ARG_PARENT_ID);
 		}
 	}
 
@@ -168,16 +161,18 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		};
 		adapter.setViewBinder(binder);
 		setListAdapter(adapter);
-		getLoaderManager().initLoader(0, null, this);
+		getLoaderManager().initLoader(LOADER_ENTRIES_LIST, null, this);
 		pbWait.listenForChange(law.getId());
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		parentIds.push(parentId);
-		parentId = id;
-		getLoaderManager().restartLoader(0, null, this);
+		if (parentId != id) {
+			oldParentId = parentId;
+			parentId = id;
+		}
+		getLoaderManager().restartLoader(LOADER_ENTRIES_LIST, null, this);
 	}
 
 	public String getName() {
@@ -185,28 +180,41 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	}
 
 	public Loader<Cursor> onCreateLoader(int loader, Bundle bundle) {
-		String[] args = new String[] { Long.toString(getLawId()), Long.toString(parentId) };
-		return new CursorLoader(getActivity(), DB.Entries.CONTENT_URI, DB.Entries.PROJECTION_DEFAULT, DB.Entries.SELECTION_LAW_PARENT, args, DB.Entries.SORTORDER_DEFAULT);
+		switch (loader) {
+		case LOADER_GET_PARTENTID:
+			return new CursorLoader(getActivity(), DB.Entries.CONTENT_URI, DB.Entries.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, new String[] { Long.toString(parentId) },
+					DB.Entries.SORTORDER_DEFAULT);
+		case LOADER_ENTRIES_LIST:
+		default:
+			return new CursorLoader(getActivity(), DB.Entries.CONTENT_URI, DB.Entries.PROJECTION_DEFAULT, DB.Entries.SELECTION_LAW_PARENT, new String[] {
+					Long.toString(getLawId()), Long.toString(parentId) }, DB.Entries.SORTORDER_DEFAULT);
+		}
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-		if (c == null || c.getCount() < 1) {
-			parentId = getLastParent();
-			getLoaderManager().restartLoader(0, null, this);
-			return;
-		}
-		adapter.swapCursor(c);
+		switch (loader.getId()) {
+		case LOADER_GET_PARTENTID:
+			if (c.moveToFirst()) {
+				parentId = c.getLong(DB.Entries.INDEX_PARENT_ID);
+				getLoaderManager().restartLoader(LOADER_ENTRIES_LIST, null, this);
+			}
+			break;
 
-		getListView().setVisibility(View.VISIBLE);
-		pbWait.setVisibility(View.INVISIBLE);
+		case LOADER_ENTRIES_LIST:
+		default:
+			if (c == null || c.getCount() < 1) {
+				parentId = oldParentId;
+				getLoaderManager().restartLoader(LOADER_ENTRIES_LIST, null, this);
+				return;
+			}
+			adapter.swapCursor(c);
+
+			getListView().setVisibility(View.VISIBLE);
+			pbWait.setVisibility(View.INVISIBLE);
+			break;
+		}
 	}
 
-	private long getLastParent() {
-		if (parentIds.size() < 1) {
-			return parentId;
-		}
-		return parentIds.pop();
-	}
 
 	public void onLoaderReset(Loader<Cursor> loader) {
 		adapter.swapCursor(null);
@@ -216,8 +224,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		if (parentId == -1) {
 			return false;
 		}
-		parentId = getLastParent();
-		getLoaderManager().restartLoader(0, null, this);
+		getLoaderManager().restartLoader(LOADER_GET_PARTENTID, null, this);
 		return true;
 	}
 
@@ -226,7 +233,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(ARG_LAW, law);
 		outState.putLong(ARG_PARENT_ID, parentId);
-		outState.putParcelable(ARG_PARENT_ID_STACK, parentIds);
 	}
 
 	@Override
@@ -252,13 +258,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public void onResume() {
 		super.onResume();
 		tvTitle.setText(getLawName());
-		// FIXME does not work here -> breaks listview use partent stack
-		//		if (entryCursor != null && !entryCursor.isClosed() && entryCursor.moveToFirst()) {
-		//			String fn = entryCursor.getString(Entries.INDEX_FULL_NAME);
-		//			if (fn != null && !"".equals(fn.trim())) {
-		//				tvTitle.setText(Html.fromHtml(fn));
-		//			}
-		//		}
 	}
 
 }
