@@ -17,5 +17,8 @@
     <string name="titleCloseDialog">Close De Lege Lata?</string>
     <string name="msgCloseDialog">Do you want to close De Lege Lata</string>
     <string name="buNeutralCloseDialog">Home</string>
+    <string name="search_settings_description">Swiss law</string>
+    <string name="menu_search">Search</string>
+    <string name="title_search">"Search: "</string>
 
 </resources>

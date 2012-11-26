@@ -42,7 +42,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
 		Bundle args = getArguments();
 		law = (LawModel) args.getParcelable(ARG_LAW);
 		if (savedInstanceState != null && law == null) {

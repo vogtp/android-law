@@ -178,6 +178,7 @@ public interface DB {
 		public static final UriTableMapping URI_TABLE_MAPPING = new UriTableMapping(CONTENT_URI, TABLE_NAME, CONTENT_ITEM_NAME, CONTENT_TYPE, CONTENT_ITEM_TYPE);
 		static final String SELECTION_LAW = NAME_LAW_ID + "=?";
 		static final String SELECTION_LAW_PARENT = NAME_LAW_ID + "=? and " + NAME_PARENT_ID + "=?";
+		public static final String SELECTION_TEXT_SEARCH = NAME_TEXT + " like ?";
 
 	}
 }

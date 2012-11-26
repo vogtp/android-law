@@ -53,7 +53,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		addFragment(fragment, lawModel.getName());
 	}
 
-	private void addFragment(Fragment fragment, String name) {
+	public void addFragment(Fragment fragment, String name) {
 		int pos = 1;
 		if (SettingsLaw.getInstance().isInsertPageAtEnd()) {
 			pos = pages.size();
@@ -64,12 +64,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		notifyDataSetChanged();
 	}
 
-	public void addFromBundle(Bundle args) {
-		Fragment fragment = new LawDisplayFragment();
-		fragment.setArguments(args);
-		fragment.setInitialSavedState(null);
-		addFragment(fragment, ((LawModel) args.getParcelable(LawDisplayFragment.ARG_LAW)).getName());
-	}
+
 
 	public boolean onBackPressed() {
 		return ((ILawFragment) getCurrentFragment()).onBackPressed();
