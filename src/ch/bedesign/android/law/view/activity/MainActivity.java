@@ -86,7 +86,8 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (!sectionsPagerAdapter.onBackPressed(viewPager.getCurrentItem())) {
+
+		if (!sectionsPagerAdapter.onBackPressed()) {
 			AlertDialog.Builder builder = new Builder(this);
 			builder.setTitle(R.string.titleCloseDialog);
 			builder.setMessage(R.string.msgCloseDialog);

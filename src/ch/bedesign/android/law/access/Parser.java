@@ -13,6 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.util.TimingLogger;
 import ch.bedesign.android.law.log.Logger;
 
@@ -262,7 +263,7 @@ public class Parser implements IParser {
 	 * @see ch.bedesign.android.law.access.IParser#getLawVersion()
 	 */
 	public String getLawVersion() {
-		/*UrlLoader loader = new UrlLoader(context);
+		UrlLoader loader = new UrlLoader(context);
 		InputStream is = null;
 		BufferedReader reader = null;
 		try {
@@ -295,15 +296,15 @@ public class Parser implements IParser {
 			} catch (IOException e) {
 				// interssiert niemand
 			}
-		}*/
-		try {
-			Document doc = Jsoup.connect(urlText).timeout(10000).get();
-			doc.select("div[class$=Stand]");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		return null;
-		//return DateFormat.getLongDateFormat(context).format(System.currentTimeMillis());
+		//		try {
+		//			Document doc = Jsoup.connect(urlText).timeout(10000).get();
+		//			doc.select("div[class$=Stand]");
+		//		} catch (IOException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
+		//		return null;
+		return DateFormat.getLongDateFormat(context).format(System.currentTimeMillis());
 	}
 }

@@ -1,11 +1,7 @@
 package ch.bedesign.android.law.view.fragment;
 
-import java.util.Stack;
-
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -30,50 +26,6 @@ import ch.bedesign.android.law.view.widget.DbUpdateProgressBar;
 
 public class LawDisplayFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
-	public static class ParentIdList extends Stack<Long> implements Parcelable {
-
-		private static final long serialVersionUID = -2403247172596842895L;
-
-		public ParentIdList() {
-			super();
-		}
-
-		private ParentIdList(Parcel in) {
-			this();
-			int size = in.readInt();
-			for (int i = 0; i < size; i++) {
-				push(in.readLong());
-			}
-		}
-
-		@Override
-		public synchronized String toString() {
-			return getClass().toString() + " #Entries: " + size();
-		}
-
-		public int describeContents() {
-			return 0;
-		}
-
-		public void writeToParcel(Parcel out, int flags) {
-			int size = size();
-			out.writeInt(size);
-			for (int i = 0; i < size; i++) {
-				out.writeLong(get(i));
-			}
-		}
-
-		public static final Parcelable.Creator<ParentIdList> CREATOR = new Parcelable.Creator<ParentIdList>() {
-			public ParentIdList createFromParcel(Parcel in) {
-				return new ParentIdList(in);
-			}
-
-			public ParentIdList[] newArray(int size) {
-				return new ParentIdList[size];
-			}
-		};
-	}
-
 	public static final String ARG_LAW = "lawParcel";
 	private static final String ARG_PARENT_ID = "parentId";
 
@@ -90,6 +42,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
 		Bundle args = getArguments();
 		law = (LawModel) args.getParcelable(ARG_LAW);
 		if (savedInstanceState != null && law == null) {
@@ -214,7 +167,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 			break;
 		}
 	}
-
 
 	public void onLoaderReset(Loader<Cursor> loader) {
 		adapter.swapCursor(null);
