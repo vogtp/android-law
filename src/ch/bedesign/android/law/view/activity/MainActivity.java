@@ -1,6 +1,10 @@
 package ch.bedesign.android.law.view.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,7 +87,23 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onBackPressed() {
 		if (!sectionsPagerAdapter.onBackPressed(viewPager.getCurrentItem())) {
-			super.onBackPressed();
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setTitle(R.string.titleCloseDialog);
+			builder.setMessage(R.string.msgCloseDialog);
+			builder.setPositiveButton(android.R.string.yes, new OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			});
+			builder.setNeutralButton(R.string.buNeutralCloseDialog, new OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int which) {
+					viewPager.setCurrentItem(0);
+				}
+			});
+			builder.setNegativeButton(android.R.string.no, null);
+			builder.create().show();
 		}
 	}
 

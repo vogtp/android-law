@@ -14,5 +14,8 @@
     <string name="prefKeyLanguage">prefKeyLanguage</string>
     <string name="prefLanguage">Language</string>
     <string name="prefLanguageLong">Changing the language requires restart of the app.</string>
+    <string name="titleCloseDialog">Close De Lege Lata?</string>
+    <string name="msgCloseDialog">Do you want to close De Lege Lata</string>
+    <string name="buNeutralCloseDialog">Home</string>
 
 </resources>
