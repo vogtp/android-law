@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="DEBUG STUFF" >
+
+    <PreferenceCategory android:title="DEBUG STUFF" >
+        <Preference
+            android:key="prefKeyDeleteAll"
+            android:title="Delete all" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/prefKeyInsertPageAtEnd"
+            android:summaryOff="@string/prefInsertPageAtEndOff"
+            android:summaryOn="@string/prefInsertPageAtEndOn"
+            android:title="@string/prefInsertPageAtEnd" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

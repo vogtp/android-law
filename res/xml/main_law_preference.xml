@@ -11,12 +11,6 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="@string/prefKeyInsertPageAtEnd"
-        android:summaryOff="@string/prefInsertPageAtEndOff"
-        android:summaryOn="@string/prefInsertPageAtEndOn"
-        android:title="@string/prefInsertPageAtEnd" />
-    <CheckBoxPreference
-        android:defaultValue="true"
         android:key="@string/prefKeyContinueUpdates"
         android:title="@string/prefContinueUpdates" />
 
