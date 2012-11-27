@@ -99,23 +99,26 @@ public class LawUpdater extends AsyncTask<Long, Object, Object> {
 		int i = 0;
 		Logger.i("Loading law " + law.getCode());
 		while (i < lawData.data.size()) {
-			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
+			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
 			Parser lawDataSecondLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawData.data.get(i).getLink());
 			lawDataSecondLevel.parse();
 			int x = 0;
 
 			while (x < lawDataSecondLevel.data.size()) {
 				if (lawDataSecondLevel.data.get(x).getId() == "ArtikelText") {
-					insert(resolver, new EntriesModel(lawId, p, lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), lawDataSecondLevel.data.get(x).getText(), 0));
+					insert(resolver, new EntriesModel(lawId, p, lawData.data.get(i).getShortText(), lawData.data.get(i).getShortText(), lawData.data.get(i).getText(),
+							lawDataSecondLevel.data.get(x).getText(), 0));
 				}
 				{
 					long l2 = insert(resolver,
-							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), null, 1));
+							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x)
+									.getShortText(), null, 1));
 					Parser lawDataThirdLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawDataSecondLevel.data.get(x).getLink());
 					lawDataThirdLevel.parse();
 					int y = 0;
 					while (y < lawDataThirdLevel.data.size()) {
 						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
+								lawDataSecondLevel.data.get(x).getShortText(),
 								lawDataThirdLevel.data.get(y).getText(), 0));
 						y++;
 					}

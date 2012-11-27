@@ -19,6 +19,7 @@ import ch.bedesign.android.law.log.Logger;
 
 public class Parser implements IParser {
 
+	//FIXME use EntityModel instead
 	class LineInfo {
 		private String id; //type long?
 		private String link; // type URL?
