@@ -17,17 +17,18 @@ public class DbInitaliser {
 
 	public static final void initDb(Context ctx) {
 
-		insertLawIfNotExists(ctx, CODE_VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "http://www.admin.ch/ch/d/sr/101/");
-		insertLawIfNotExists(ctx, CODE_OR, "Obligationenrecht", "http://www.admin.ch/ch/d/sr/220/");
-		insertLawIfNotExists(ctx, CODE_ZGB, "Schweizerisches Zivilgesetzbuch", "http://www.admin.ch/ch/d/sr/210/");
-		insertLawIfNotExists(ctx, CODE_STGB, "Schweizerisches Strafgesetzbuch", "http://www.admin.ch/ch/d/sr/311_0/");
+		//FIXME ask muriel is BV correct
+		insertLawIfNotExists(ctx, CODE_VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "BV", "http://www.admin.ch/ch/d/sr/101/");
+		insertLawIfNotExists(ctx, CODE_OR, "Obligationenrecht", "OR", "http://www.admin.ch/ch/d/sr/220/");
+		insertLawIfNotExists(ctx, CODE_ZGB, "Schweizerisches Zivilgesetzbuch", "ZGB", "http://www.admin.ch/ch/d/sr/210/");
+		insertLawIfNotExists(ctx, CODE_STGB, "Schweizerisches Strafgesetzbuch", "StGB", "http://www.admin.ch/ch/d/sr/311_0/");
 
 	}
 
-	private static void insertLawIfNotExists(Context ctx, String code, String name, String url) {
+	private static void insertLawIfNotExists(Context ctx, String code, String name, String shortName, String url) {
 		ContentResolver resolver = ctx.getContentResolver();
 		if (hasThisLaw(resolver, code)) {
-			LawModel verfassung = new LawModel(code, name, CountryModel.CH_de.getId(), ctx.getString(R.string.msg_law_not_yet_loaded), url, -1);
+			LawModel verfassung = new LawModel(code, name, shortName, CountryModel.CH_de.getId(), ctx.getString(R.string.msg_law_not_yet_loaded), url, -1);
 			resolver.insert(Laws.CONTENT_URI, verfassung.getValues());
 		}
 	}

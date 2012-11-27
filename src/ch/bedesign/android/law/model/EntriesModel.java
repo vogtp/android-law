@@ -10,15 +10,17 @@ public class EntriesModel {
 	private long id = -1;
 	private long lawId;
 	private long parentId;
+	private String name;
 	private String shortName;
 	private String fullName;
 	private String text;
 	private long sequence;
 
-	public EntriesModel(long lawId, long parentId, String shortName, String fullName, String text, long sequence) {
+	public EntriesModel(long lawId, long parentId, String name, String shortName, String fullName, String text, long sequence) {
 		super();
 		this.lawId = lawId;
 		this.parentId = parentId;
+		this.name = name;
 		this.shortName = shortName;
 		this.fullName = fullName;
 		this.text = text;
@@ -30,6 +32,7 @@ public class EntriesModel {
 		this.id = c.getLong(DB.INDEX_ID);
 		this.lawId = c.getLong(Entries.INDEX_LAW_ID);
 		this.parentId = c.getLong(Entries.INDEX_PARENT_ID);
+		this.name = c.getString(Entries.INDEX_NAME);
 		this.shortName = c.getString(Entries.INDEX_SHORT_NAME);
 		this.fullName = c.getString(Entries.INDEX_FULL_NAME);
 		this.text = c.getString(Entries.INDEX_TEXT);
@@ -43,6 +46,7 @@ public class EntriesModel {
 		}
 		values.put(Entries.NAME_LAW_ID, lawId);
 		values.put(Entries.NAME_PARENT_ID, parentId);
+		values.put(Entries.NAME_NAME, name);
 		values.put(Entries.NAME_SHORT_NAME, shortName);
 		values.put(Entries.NAME_FULL_NAME, fullName);
 		values.put(Entries.NAME_TEXT, text);
@@ -63,6 +67,14 @@ public class EntriesModel {
 
 	public void setParentId(long parentId) {
 		this.parentId = parentId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getShortName() {

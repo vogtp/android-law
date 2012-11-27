@@ -15,16 +15,19 @@ public class LawModel implements Parcelable {
 	private long id = -1;
 	private String code;
 	private String name;
+	private String shortName;
 	private long countryId;
 	private String version;
 	private String url;
 	private long lastCheck;
 	private long isUpdating = -1;
 
-	public LawModel(String code, String name, long countryId, String version, String url, long lastCheck) {
+
+	public LawModel(String code, String name, String shortName, long countryId, String version, String url, long lastCheck) {
 		super();
 		this.code = code;
 		this.name = name;
+		this.shortName = shortName;
 		this.countryId = countryId;
 		this.version = version;
 		this.url = url;
@@ -36,6 +39,7 @@ public class LawModel implements Parcelable {
 		this.id = c.getLong(DB.INDEX_ID);
 		this.code = c.getString(Laws.INDEX_CODE);
 		this.name = c.getString(Laws.INDEX_NAME);
+		this.shortName = c.getString(Laws.INDEX_SHORT_NAME);
 		this.countryId = c.getLong(Laws.INDEX_COUNTRY_ID);
 		this.version = c.getString(Laws.INDEX_VERSION);
 		this.url = c.getString(Laws.INDEX_URL);
@@ -48,6 +52,7 @@ public class LawModel implements Parcelable {
 		this.id = in.readLong();
 		this.code = in.readString();
 		this.name = in.readString();
+		this.shortName = in.readString();
 		this.countryId = in.readLong();
 		this.version = in.readString();
 		this.url = in.readString();
@@ -59,12 +64,14 @@ public class LawModel implements Parcelable {
 		this.id = -1;
 		this.code = "none";
 		this.name = "none";
+		this.shortName = "none";
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeLong(id);
 		dest.writeString(code);
 		dest.writeString(name);
+		dest.writeString(shortName);
 		dest.writeLong(countryId);
 		dest.writeString(version);
 		dest.writeString(url);
@@ -80,6 +87,7 @@ public class LawModel implements Parcelable {
 		}
 		values.put(Laws.NAME_CODE, code);
 		values.put(Laws.NAME_NAME, name);
+		values.put(Laws.NAME_SHORT_NAME, shortName);
 		values.put(Laws.NAME_COUNTRY_ID, countryId);
 		values.put(Laws.NAME_VERSION, version);
 		values.put(Laws.NAME_URL, url);
@@ -112,6 +120,14 @@ public class LawModel implements Parcelable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
 	public long getCountryId() {
