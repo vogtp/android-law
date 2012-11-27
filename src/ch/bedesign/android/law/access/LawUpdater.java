@@ -118,7 +118,7 @@ public class LawUpdater extends AsyncTask<Long, Object, Object> {
 					int y = 0;
 					while (y < lawDataThirdLevel.data.size()) {
 						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
-								lawDataSecondLevel.data.get(x).getShortText(),
+								lawDataSecondLevel.data.get(y).getShortText(),
 								lawDataThirdLevel.data.get(y).getText(), 0));
 						y++;
 					}
