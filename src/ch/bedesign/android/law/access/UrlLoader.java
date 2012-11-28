@@ -78,6 +78,14 @@ public class UrlLoader {
 		}
 	}
 
+	public static void deleteCache(Context context) {
+		Logger.w("Deleting cache");
+		File cacheDir = context.getCacheDir();
+		for (File file : cacheDir.listFiles()) {
+			file.delete();
+		}
+	}
+
 	private File getCacheFile(String urlStr) {
 		File cacheDir = context.getCacheDir();
 		return new File(cacheDir, Integer.toString(urlStr.hashCode()));

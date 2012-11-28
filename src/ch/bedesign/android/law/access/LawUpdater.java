@@ -12,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import ch.bedesign.android.law.access.Parser.LineInfo;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.db.DB.Laws;
@@ -99,26 +100,29 @@ public class LawUpdater extends AsyncTask<Long, Object, Object> {
 		int i = 0;
 		Logger.i("Loading law " + law.getCode());
 		while (i < lawData.data.size()) {
-			long p = insert(resolver, new EntriesModel(lawId, -1, lawData.data.get(i).getShortText(), lawData.data.get(i).getShortText(), lawData.data.get(i).getText(), null, 0));
-			Parser lawDataSecondLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawData.data.get(i).getLink());
+			LineInfo dataI = lawData.data.get(i);
+			long p = insert(resolver, new EntriesModel(lawId, -1, dataI.getShortText(), dataI.getShortText(), dataI.getText(), null, 0));
+			Parser lawDataSecondLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + dataI.getLink());
 			lawDataSecondLevel.parse();
 			int x = 0;
 
 			while (x < lawDataSecondLevel.data.size()) {
-				if (lawDataSecondLevel.data.get(x).getId() == "ArtikelText") {
-					insert(resolver, new EntriesModel(lawId, p, lawData.data.get(i).getShortText(), lawData.data.get(i).getShortText(), lawData.data.get(i).getText(),
-							lawDataSecondLevel.data.get(x).getText(), 0));
+				LineInfo dataX = lawDataSecondLevel.data.get(x);
+				if (dataX.getId() == "ArtikelText") {
+					insert(resolver, new EntriesModel(lawId, p, dataI.getShortText(), dataI.getShortText(), dataI.getText(),
+							dataX.getText(), 0));
 				}
 				{
 					long l2 = insert(resolver,
-							new EntriesModel(lawId, p, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x)
+							new EntriesModel(lawId, p, dataX.getShortText(), dataX.getShortText(), dataX
 									.getShortText(), null, 1));
-					Parser lawDataThirdLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + lawDataSecondLevel.data.get(x).getLink());
+					Parser lawDataThirdLevel = new Parser(ctx, "http://www.admin.ch/ch/d/sr/" + SrNr + "/" + dataX.getLink());
 					lawDataThirdLevel.parse();
 					int y = 0;
 					while (y < lawDataThirdLevel.data.size()) {
-						insert(resolver, new EntriesModel(lawId, l2, lawDataSecondLevel.data.get(x).getShortText(), lawDataSecondLevel.data.get(x).getShortText(),
-								lawDataSecondLevel.data.get(x).getShortText(),
+						LineInfo dataY = lawDataSecondLevel.data.get(y);
+						insert(resolver, new EntriesModel(lawId, l2, dataX.getShortText(), dataX.getShortText(),
+								dataY.getShortText(),
 								lawDataThirdLevel.data.get(y).getText(), 0));
 						y++;
 					}

@@ -37,7 +37,8 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private long parentId = -1;
 	private long oldParentId = -1;
 	private DbUpdateProgressBar pbWait;
-	private TextView tvTitle;
+
+	//private LawCrumbs lawCrumbs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,8 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.law_display_list, container, false);
 		pbWait = (DbUpdateProgressBar) v.findViewById(R.id.pbWait);
-		tvTitle = (TextView) v.findViewById(R.id.tvLawTitle);
+		TextView tvTitle = (TextView) v.findViewById(R.id.tvLawTitle);
+		//lawCrumbs = (LawCrumbs) v.findViewById(R.id.lawCrumbs);
 		return v;
 	}
 
@@ -160,6 +162,9 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 				return;
 			}
 			adapter.swapCursor(c);
+			if (c.moveToFirst()) {
+				//	lawCrumbs.setEntityId(c.getLong(DB.INDEX_ID));
+			}
 
 			getListView().setVisibility(View.VISIBLE);
 			pbWait.setVisibility(View.INVISIBLE);
@@ -205,10 +210,5 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		return law.getName();
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		tvTitle.setText(getLawName());
-	}
 
 }
