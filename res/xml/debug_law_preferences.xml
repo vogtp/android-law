@@ -4,6 +4,9 @@
 
     <PreferenceCategory android:title="DEBUG STUFF" >
         <Preference
+            android:key="prefKeyShowDB"
+            android:title="Show DB" />
+        <Preference
             android:key="prefKeyDeleteAll"
             android:title="Delete all" />
 
