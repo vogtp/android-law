@@ -63,7 +63,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.law_display_list, container, false);
 		pbWait = (DbUpdateProgressBar) v.findViewById(R.id.pbWait);
-		tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+		tvTitle = (TextView) v.findViewById(R.id.tvLawTitle);
 		return v;
 	}
 
