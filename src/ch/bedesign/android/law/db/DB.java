@@ -42,7 +42,7 @@ public interface DB {
 		private static final String CREATE_ENTRYS_TABLE = "create table if not exists " + Entries.TABLE_NAME + " (" + DB.NAME_ID + " integer primary key, "
 				+ Entries.NAME_LAW_ID + " long, " + Entries.NAME_NAME + " text, " + Entries.NAME_SHORT_NAME + " text, " + Entries.NAME_FULL_NAME + " text,"
 				+ Entries.NAME_PARENT_ID + " long, "
-				+ Entries.NAME_TEXT + " text, " + Entries.NAME_SEQUENCE + " int);";
+				+ Entries.NAME_TEXT + " text, " + Entries.NAME_SEQUENCE + " int, " + Entries.NAME_URL + " text);";
 
 		public OpenHelper(Context context) {
 			super(context, DB.DATABASE_NAME, null, DATABASE_VERSION);
@@ -163,6 +163,7 @@ public interface DB {
 		public static final String NAME_FULL_NAME = "fullName";
 		public static final String NAME_PARENT_ID = "parentId";
 		public static final String NAME_TEXT = "text";
+		public static final String NAME_URL = "url";
 		/**
 		 * The sort order of the entries
 		 */
@@ -175,8 +176,10 @@ public interface DB {
 		public static final int INDEX_PARENT_ID = 5;
 		public static final int INDEX_TEXT = 6;
 		public static final int INDEX_SEQUENCE = 7;
+		public static final int INDEX_URL = 8;
 
-		public static final String[] PROJECTION_DEFAULT = new String[] { NAME_ID, NAME_LAW_ID, NAME_NAME, NAME_SHORT_NAME, NAME_FULL_NAME, NAME_PARENT_ID, NAME_TEXT, NAME_SEQUENCE };
+		public static final String[] PROJECTION_DEFAULT = new String[] { NAME_ID, NAME_LAW_ID, NAME_NAME, NAME_SHORT_NAME, NAME_FULL_NAME, NAME_PARENT_ID, NAME_TEXT,
+				NAME_SEQUENCE, NAME_URL };
 
 		public static final String SORTORDER_DEFAULT = NAME_SEQUENCE + " ASC";
 		public static final String SORTORDER_REVERSE = NAME_SEQUENCE + " DESC";

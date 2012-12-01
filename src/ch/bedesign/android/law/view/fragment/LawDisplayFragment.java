@@ -163,7 +163,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 			}
 			adapter.swapCursor(c);
 			if (c.moveToFirst()) {
-				//	lawCrumbs.setEntityId(c.getLong(DB.INDEX_ID));
+				//lawCrumbs.setEntityId(c.getLong(DB.INDEX_ID));
 			}
 
 			getListView().setVisibility(View.VISIBLE);
