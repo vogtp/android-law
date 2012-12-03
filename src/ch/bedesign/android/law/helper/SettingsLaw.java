@@ -65,7 +65,21 @@ public class SettingsLaw {
 	}
 
 	public String getLanguage() {
-		// TODO Auto-generated method stub
 		return getStringPreference(R.string.prefKeyLanguage, "");
+	}
+
+	public String getLanguageUrlPart() {
+		StringBuilder url = new StringBuilder();
+		String lang = getStringPreference(R.string.prefKeyLanguage, "");
+		boolean sr = true;
+		if ("fr".equals(lang) || "it".equals(lang)) {
+			url.append(lang.substring(0, 1)).append("/");
+			sr = false;
+		} else {
+			url.append("d");
+		}
+		url.append("/");
+		url.append(sr ? "sr" : "rs");
+		return url.toString();
 	}
 }
