@@ -17,6 +17,12 @@ public class EntriesModel {
 	private String text;
 	private long sequence;
 
+	public EntriesModel(long lawId, long parentId) {
+		super();
+		this.lawId = lawId;
+		this.parentId = parentId;
+	}
+
 	public EntriesModel(long lawId, long parentId, String url, String name, String shortName, String fullName, String text, long sequence) {
 		super();
 		this.lawId = lawId;
