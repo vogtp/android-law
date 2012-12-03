@@ -36,15 +36,17 @@ public class LawCrumbs extends LinearLayout {
 				Entries.SORTORDER_DEFAULT);
 		Cursor cursorEntity = null;
 		Cursor cursorLaw = null;
+		removeAllViews();
 		try {
 			cursorEntity = clEntity.loadInBackground();
 
 			if (cursorEntity.moveToFirst()) {
 				long pid = cursorEntity.getLong(Entries.INDEX_PARENT_ID);
-				if (id < 0) {
+				if (pid < 0) {
 					// get law and return
+					long lawId = cursorEntity.getLong(Entries.INDEX_LAW_ID);
 					CursorLoader clLaw = new CursorLoader(getContext(), Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID,
-							new String[] { Long.toString(cursorEntity.getLong(Entries.INDEX_LAW_ID)) }, Entries.SORTORDER_DEFAULT);
+							new String[] { Long.toString(lawId) }, Laws.SORTORDER_DEFAULT);
 					cursorLaw = clLaw.loadInBackground();
 					if (cursorLaw.moveToFirst()) {
 						addView(getShortTextView(cursorLaw.getString(Laws.INDEX_SHORT_NAME)), 0);
@@ -65,10 +67,13 @@ public class LawCrumbs extends LinearLayout {
 		}
 	}
 
+
 	private View getShortTextView(String text) {
 		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 		TextView tv = new TextView(getContext());
 		tv.setPadding(0, 2, 7, 2);
+		tv.setEllipsize(TruncateAt.END);
+
 		SpannableString content = new SpannableString(text);
 		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 		tv.setEllipsize(TruncateAt.END);
