@@ -10,14 +10,14 @@
         android:id="@+id/tvLawTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="7dp"
+        android:padding="7dp" android:text="Title"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="italic" />
 
     <TextView
         android:id="@+id/tvLawText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content" android:text="Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

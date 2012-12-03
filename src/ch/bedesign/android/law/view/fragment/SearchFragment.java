@@ -43,14 +43,14 @@ public class SearchFragment extends ListFragment implements ILawFragment, Loader
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setListShown(false);
-		adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_1, null,
-				new String[] { DB.Entries.NAME_SHORT_NAME },
-				new int[] { android.R.id.text1 }, 0);
+		adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
+				new String[] { DB.Entries.NAME_FULL_NAME, DB.Entries.NAME_NAME },
+				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
 
 		ViewBinder viewBinder = new ViewBinder() {
 
 			public boolean setViewValue(View v, Cursor c, int idx) {
-				if (idx == Entries.INDEX_SHORT_NAME) {
+				if (idx == Entries.INDEX_NAME) {
 					((TextView) v).setText(Html.fromHtml(c.getString(idx)));
 					return true;
 				}

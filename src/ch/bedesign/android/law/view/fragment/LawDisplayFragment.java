@@ -23,6 +23,7 @@ import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
 import ch.bedesign.android.law.view.widget.DbUpdateProgressBar;
+import ch.bedesign.android.law.view.widget.LawCrumbs;
 
 public class LawDisplayFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
@@ -38,7 +39,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	private long oldParentId = -1;
 	private DbUpdateProgressBar pbWait;
 
-	//private LawCrumbs lawCrumbs;
+	private LawCrumbs lawCrumbs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,8 +65,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.law_display_list, container, false);
 		pbWait = (DbUpdateProgressBar) v.findViewById(R.id.pbWait);
-		TextView tvTitle = (TextView) v.findViewById(R.id.tvLawTitle);
-		//lawCrumbs = (LawCrumbs) v.findViewById(R.id.lawCrumbs);
+		lawCrumbs = (LawCrumbs) v.findViewById(R.id.lawCrumbs);
 		return v;
 	}
 
@@ -79,32 +79,36 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		LawUpdater.loadLaw(getActivity(), getLawId());
 
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_display_list_item, null,
-				new String[] { DB.Entries.NAME_SHORT_NAME, DB.Entries.NAME_TEXT },
+				new String[] { DB.Entries.NAME_NAME, DB.Entries.NAME_TEXT },
 				new int[] { R.id.tvLawTitle, R.id.tvLawText }, 0);
 		ViewBinder binder = new ViewBinder() {
 
-			public boolean setViewValue(View view, Cursor cursor, int idx) {
-				if (DB.Entries.INDEX_TEXT == idx) {
+			public boolean setViewValue(View view, Cursor cursor, int fieldIdx) {
+				if (DB.Entries.INDEX_TEXT == fieldIdx) {
 					if (view instanceof TextView) {
-						String string = cursor.getString(idx);
+						String string = cursor.getString(fieldIdx);
 						if (string != null) {
 							Spanned fromHtml = Html.fromHtml(string);
 							TextView tv = (TextView) view;
 							tv.setText(fromHtml);
-							view.setVisibility(View.VISIBLE);
-							((View) view.getParent()).findViewById(R.id.tvLawTitle).setVisibility(View.GONE);
+							//							view.setVisibility(View.VISIBLE);
+							//							((View) view.getParent()).findViewById(R.id.tvLawTitle).setVisibility(View.GONE);
 							return true;
 						}
 					}
-				} else if (DB.Entries.INDEX_SHORT_NAME == idx) {
+				} else if (DB.Entries.INDEX_NAME == fieldIdx) {
 					if (view instanceof TextView) {
-						String string = cursor.getString(idx);
+						String string = cursor.getString(fieldIdx);
 						if (string != null) {
 							Spanned fromHtml = Html.fromHtml(string);
-							TextView tv = (TextView) view;
-							tv.setText(fromHtml);
-							view.setVisibility(View.VISIBLE);
-							((View) view.getParent()).findViewById(R.id.tvLawText).setVisibility(View.GONE);
+							TextView tvName = (TextView) view;
+							tvName.setText(cursor.getString(DB.Entries.INDEX_SHORT_NAME));
+							//							tvName.setVisibility(View.VISIBLE);
+							//							tvName.setTextColor(Color.WHITE);
+							TextView tvText = (TextView) ((View) view.getParent()).findViewById(R.id.tvLawText);
+							//							tvText.setVisibility(View.VISIBLE);
+							//							tvText.setTextColor(Color.WHITE);
+							tvText.setText(fromHtml);
 							return true;
 						}
 					}
@@ -163,7 +167,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 			}
 			adapter.swapCursor(c);
 			if (c.moveToFirst()) {
-				//lawCrumbs.setEntityId(c.getLong(DB.INDEX_ID));
+				lawCrumbs.setEntityId(c.getLong(DB.INDEX_ID));
 			}
 
 			getListView().setVisibility(View.VISIBLE);

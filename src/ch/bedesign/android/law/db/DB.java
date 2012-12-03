@@ -170,8 +170,8 @@ public interface DB {
 		public static final String NAME_SEQUENCE = "sequence";
 
 		public static final int INDEX_LAW_ID = 1;
-		public static final int INDEX_SHORT_NAME = 2;
-		public static final int INDEX_NAME = 3;
+		public static final int INDEX_NAME = 2;
+		public static final int INDEX_SHORT_NAME = 3;
 		public static final int INDEX_FULL_NAME = 4;
 		public static final int INDEX_PARENT_ID = 5;
 		public static final int INDEX_TEXT = 6;

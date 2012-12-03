@@ -176,7 +176,7 @@ public class LawUpdater extends AsyncTask<Long, Object, Object> {
 				for (Element art : arts) {
 					text = text + "<br>" + art.text();
 				}
-				text = text.substring(2);
+				text = text.substring(4);
 				entrie = new EntriesModel(lawId, p2, "", name, "", name, text, 0);
 			}
 
