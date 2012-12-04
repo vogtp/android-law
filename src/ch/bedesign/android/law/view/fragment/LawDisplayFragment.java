@@ -199,7 +199,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.list_option, menu);
+		inflater.inflate(R.menu.close_fragment_option, menu);
 	};
 
 	@Override
