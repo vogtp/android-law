@@ -47,12 +47,14 @@ public class Parser {
 						EntriesModel em = new EntriesModel(lawId, -1);
 						//em.setUrl(link.nextElementSibling().toString());
 						em.setName(link.nextElementSibling().toString());
+						em.setShortName(link.nextElementSibling().toString());
 						em.setFullName(law.getShortName());//TODO fix me
 						parentIdFirstLevel = insert(em);
 					} else if (link.attr("abs:href").contains("index")) {
 						EntriesModel em = new EntriesModel(lawId, parentIdFirstLevel);
 						em.setUrl(link.attr("abs:href"));
 						em.setName(link.text());
+						em.setShortName(link.text());
 						em.setFullName(law.getShortName());
 						long parentIdSecondLevel = insert(em);
 						Document subdoc = Jsoup.connect(link.attr("abs:href")).timeout(10000).get();
@@ -62,6 +64,7 @@ public class Parser {
 								// Entries Model (Gesetz ID, Parent Id,url, Name Gesetz???, Kurztext, Fullname, Text(Artikel selbst), sequence (long))
 								EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
 								emThirdLevel.setName(subLink.nextElementSibling().toString());
+								emThirdLevel.setShortName(subLink.nextElementSibling().toString());
 								emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
 								long parentIdThirdLevel = insert(emThirdLevel);
 							} else {
