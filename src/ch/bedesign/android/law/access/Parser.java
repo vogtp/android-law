@@ -40,38 +40,56 @@ public class Parser {
 		try {
 			Document doc = Jsoup.connect(urlText).timeout(10000).get();
 			Elements links = doc.select("A[NAME]");
-			long pt = -1;
+			long parentIdFirstLevel = -1;
 			for (Element link : links) {
 				if (link.attr("name").contains("id")) {
 					if (link.attr("abs:href") == "") {
 						EntriesModel em = new EntriesModel(lawId, -1);
-						em.setUrl(link.nextElementSibling().toString());
+						//em.setUrl(link.nextElementSibling().toString());
 						em.setName(link.nextElementSibling().toString());
-						em.setFullName("PFAD");//TODO fix me
-						pt = insert(em);
+						em.setFullName(law.getShortName());//TODO fix me
+						parentIdFirstLevel = insert(em);
 					} else if (link.attr("abs:href").contains("index")) {
-						long p = insert(new EntriesModel(lawId, pt, link.attr("abs:href"), link.text(), "", link.text(), "", 0));
+						EntriesModel em = new EntriesModel(lawId, parentIdFirstLevel);
+						em.setUrl(link.attr("abs:href"));
+						em.setName(link.text());
+						em.setFullName(law.getShortName());
+						long parentIdSecondLevel = insert(em);
 						Document subdoc = Jsoup.connect(link.attr("abs:href")).timeout(10000).get();
 						Elements subLinks = subdoc.select("A[Name]");
 						for (Element subLink : subLinks) {
 							if (subLink.attr("abs:href") == "") {
-								// Entries Model (Gesetz ID, Parent Id, Name Gesetz???, Kurztext, Fullname, Text(Artikel selbst), sequence (long))
-								long p2 = insert(new EntriesModel(lawId, p, "", subLink.nextElementSibling().toString(), "", subLink.nextElementSibling().toString(), "",
-										0));
+								// Entries Model (Gesetz ID, Parent Id,url, Name Gesetz???, Kurztext, Fullname, Text(Artikel selbst), sequence (long))
+								EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
+								emThirdLevel.setName(subLink.nextElementSibling().toString());
+								emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
+								long parentIdThirdLevel = insert(emThirdLevel);
 							} else {
-								long p2 = insert(new EntriesModel(lawId, p, subLink.attr("abs:href"), subLink.text().substring(
-										subLink.select("B").text().length()), subLink.select("B").text(), "PFAD", "", 0));
-								EntriesModel entrie = parseArticleText(subLink.attr("abs:href"), p2);
+								EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
+								emThirdLevel.setUrl(subLink.attr("abs:href"));
+								String name = subLink.text().substring(subLink.select("B").text().length());
+								emThirdLevel.setName(name);
+								emThirdLevel.setShortName(subLink.select("B").text());
+								emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
+								long parentIdThirdLevel = insert(emThirdLevel);
+								EntriesModel entrie = parseArticleText(subLink.attr("abs:href"), parentIdThirdLevel);
 								if (entrie != null) {
+									entrie.setFullName(law.getShortName() + "/" + link.text() + "/" + name);
 									insert(entrie);
 								}
 							}
 						}
 					} else {
-						EntriesModel e = new EntriesModel(lawId, -1, link.attr("abs:href"), "", link.text(), "", null, 0);
-						long p = insert(e);
-						EntriesModel entrie = parseArticleText(link.attr("abs:href"), p);
+						EntriesModel em = new EntriesModel(lawId, parentIdFirstLevel);
+						em.setUrl(link.attr("abs:href"));
+						String name = link.text().substring(link.select("B").text().length());
+						em.setName(name);
+						em.setShortName(link.select("B").text());
+						em.setFullName(law.getShortName());
+						long ParentIdSecondLevel = insert(em);
+						EntriesModel entrie = parseArticleText(link.attr("abs:href"), ParentIdSecondLevel);
 						if (entrie != null) {
+							entrie.setFullName(law.getShortName() + "/" + name);
 							insert(entrie);
 						}
 					}
@@ -88,7 +106,7 @@ public class Parser {
 		//timingLogger.dumpToLog();
 	}
 
-	public EntriesModel parseArticleText(String urlText, long p2) throws IOException {
+	public EntriesModel parseArticleText(String urlText, long parentId) throws IOException {
 		Logger.v("Parse law from " + urlText);
 		EntriesModel entrie = null;
 		try {
@@ -102,7 +120,7 @@ public class Parser {
 					text = text + "<br>" + art.text();
 				}
 				text = text.substring(4);
-				entrie = new EntriesModel(lawId, p2, "", name, "", name, text, 0);
+				entrie = new EntriesModel(lawId, parentId, "", name, "", "", text, 0);
 			}
 
 		} catch (IOException e) {
