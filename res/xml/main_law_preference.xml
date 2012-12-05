@@ -14,4 +14,9 @@
         android:key="@string/prefKeyContinueUpdates"
         android:title="@string/prefContinueUpdates" />
 
+    <Preference
+        android:key="@string/prefKeyBuyMeABeer"
+        android:title="@string/prefBuyMeABeer" >
+    </Preference>
+
 </PreferenceScreen>

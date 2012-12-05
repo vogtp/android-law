@@ -20,5 +20,7 @@
     <string name="search_settings_description">Swiss law</string>
     <string name="menu_search">Search</string>
     <string name="title_search">"Search: "</string>
+    <string name="prefBuyMeABeer">Buy me a beer.</string>
+    <string name="prefKeyBuyMeABeer">prefKeyBuyMeABeer</string>
 
 </resources>
