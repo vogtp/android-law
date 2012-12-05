@@ -35,7 +35,7 @@ public class Parser {
 
 	public void parse() throws IOException {
 		String urlText = law.getUrl();
-		Logger.v("Parse law from " + urlText);
+		Logger.i("Parse law from " + urlText);
 		// Entries Model (ID (auto increment), Gesetz ID, Parent Id, url, Name , Kurztext, Fullname, Text(Artikel selbst), sequence (long))
 		try {
 			Document doc = Jsoup.connect(urlText).timeout(10000).get();

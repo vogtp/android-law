@@ -56,7 +56,7 @@ public class DbUpdateProgressBar extends ProgressBar {
 
 	public void listenForChange(long id) {
 		if (id == dbId) {
-			Logger.i("DbUpdateProgressBar already observing...");
+			//			Logger.v("DbUpdateProgressBar already observing...");
 			return;
 		}
 		this.dbId = id;
