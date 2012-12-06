@@ -41,20 +41,32 @@ public class Parser {
 			Document doc = Jsoup.connect(urlText).timeout(10000).get();
 			Elements links = doc.select("A[NAME]");
 			long parentIdFirstLevel = -1;
-			String lastItemsURL = "";
+			int titelNumber = 1;
+			long IdOfElementLevelUp = -1;
 			for (Element link : links) {
 				if (link.attr("name").contains("id")) {
 					if (link.attr("abs:href") == "") {
 						EntriesModel em = new EntriesModel(lawId, -1);
-						if (lastItemsURL == "") {
-							em.setParentId(parentIdFirstLevel);
-						} else {
-							em.setParentId(-1);
-						}
 						em.setName(link.nextElementSibling().text());
 						em.setShortName(link.nextElementSibling().text());
-						em.setFullName(law.getShortName());//TODO fix me
-						parentIdFirstLevel = insert(em);
+						em.setFullName(law.getShortName());
+
+						if (titelNumber == 1) {
+							em.setParentId(-1);
+							parentIdFirstLevel = insert(em);
+							IdOfElementLevelUp = parentIdFirstLevel;
+						} else if (Integer.parseInt(link.nextElementSibling().toString().substring(2, 3)) > titelNumber) {
+							em.setParentId(IdOfElementLevelUp);
+							parentIdFirstLevel = insert(em);
+							titelNumber = Integer.parseInt(link.nextElementSibling().toString().substring(2, 3));
+						} else if (Integer.parseInt(link.nextElementSibling().toString().substring(2, 3)) == titelNumber) {
+							em.setParentId(IdOfElementLevelUp);
+							parentIdFirstLevel = insert(em);
+						} else {
+							em.setParentId(-1);
+							parentIdFirstLevel = insert(em);
+							IdOfElementLevelUp = parentIdFirstLevel;
+						}
 					} else if (link.attr("abs:href").contains("index")) {
 						EntriesModel em = new EntriesModel(lawId, parentIdFirstLevel);
 						em.setUrl(link.attr("abs:href"));
@@ -106,7 +118,6 @@ public class Parser {
 					}
 
 				}
-				//lastItemsURL = link.attr("abs:href");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
