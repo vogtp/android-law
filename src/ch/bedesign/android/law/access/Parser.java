@@ -41,13 +41,18 @@ public class Parser {
 			Document doc = Jsoup.connect(urlText).timeout(10000).get();
 			Elements links = doc.select("A[NAME]");
 			long parentIdFirstLevel = -1;
+			String lastItemsURL = "";
 			for (Element link : links) {
 				if (link.attr("name").contains("id")) {
 					if (link.attr("abs:href") == "") {
 						EntriesModel em = new EntriesModel(lawId, -1);
-						//em.setUrl(link.nextElementSibling().toString());
-						em.setName(link.nextElementSibling().toString());
-						em.setShortName(link.nextElementSibling().toString());
+						if (lastItemsURL == "") {
+							em.setParentId(parentIdFirstLevel);
+						} else {
+							em.setParentId(-1);
+						}
+						em.setName(link.nextElementSibling().text());
+						em.setShortName(link.nextElementSibling().text());
 						em.setFullName(law.getShortName());//TODO fix me
 						parentIdFirstLevel = insert(em);
 					} else if (link.attr("abs:href").contains("index")) {
@@ -59,14 +64,15 @@ public class Parser {
 						long parentIdSecondLevel = insert(em);
 						Document subdoc = Jsoup.connect(link.attr("abs:href")).timeout(10000).get();
 						Elements subLinks = subdoc.select("A[Name]");
+						long parentIdThirdLevel = parentIdSecondLevel;
 						for (Element subLink : subLinks) {
 							if (subLink.attr("abs:href") == "") {
 								// Entries Model (Gesetz ID, Parent Id,url, Name Gesetz???, Kurztext, Fullname, Text(Artikel selbst), sequence (long))
 								EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
-								emThirdLevel.setName(subLink.nextElementSibling().toString());
-								emThirdLevel.setShortName(subLink.nextElementSibling().toString());
+								emThirdLevel.setName(subLink.nextElementSibling().text());
+								emThirdLevel.setShortName(subLink.nextElementSibling().text());
 								emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
-								long parentIdThirdLevel = insert(emThirdLevel);
+								parentIdThirdLevel = insert(emThirdLevel);
 							} else {
 								EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
 								emThirdLevel.setUrl(subLink.attr("abs:href"));
@@ -74,10 +80,11 @@ public class Parser {
 								emThirdLevel.setName(name);
 								emThirdLevel.setShortName(subLink.select("B").text());
 								emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
-								long parentIdThirdLevel = insert(emThirdLevel);
+								parentIdThirdLevel = insert(emThirdLevel);
 								EntriesModel entrie = parseArticleText(subLink.attr("abs:href"), parentIdThirdLevel);
 								if (entrie != null) {
 									entrie.setFullName(law.getShortName() + "/" + link.text() + "/" + name);
+									entrie.setShortName(subLink.select("B").text());
 									insert(entrie);
 								}
 							}
@@ -93,12 +100,13 @@ public class Parser {
 						EntriesModel entrie = parseArticleText(link.attr("abs:href"), ParentIdSecondLevel);
 						if (entrie != null) {
 							entrie.setFullName(law.getShortName() + "/" + name);
+							entrie.setShortName(link.select("B").text());
 							insert(entrie);
 						}
 					}
 
 				}
-
+				//lastItemsURL = link.attr("abs:href");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -120,9 +128,9 @@ public class Parser {
 				String text = "";
 				Elements arts = artikel.select("p");
 				for (Element art : arts) {
-					text = text + "<br>" + art.text();
+					text = text + "<br><br>" + art.text();
 				}
-				text = text.substring(4);
+				text = text.substring(8);
 				entrie = new EntriesModel(lawId, parentId, "", name, "", "", text, 0);
 			}
 
