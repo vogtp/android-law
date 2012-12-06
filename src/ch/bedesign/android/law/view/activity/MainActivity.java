@@ -223,7 +223,7 @@ public class MainActivity extends FragmentActivity {
 	private void addLawDisplayFragment(Bundle bundle) {
 		LawDisplayFragment f = new LawDisplayFragment();
 		f.setArguments(bundle);
-		sectionsPagerAdapter.addFragment(f, ((LawModel) bundle.getParcelable(LawDisplayFragment.ARG_LAW)).getName());
+		sectionsPagerAdapter.addFragment(f, ((LawModel) bundle.getParcelable(LawDisplayFragment.ARG_LAW)).getShortName());
 	}
 
 }

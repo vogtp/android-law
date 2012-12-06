@@ -50,7 +50,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		Fragment fragment = new LawDisplayFragment();
 		args.putParcelable(LawDisplayFragment.ARG_LAW, lawModel);
 		fragment.setArguments(args);
-		addFragment(fragment, lawModel.getName());
+		addFragment(fragment, lawModel.getShortName());
 	}
 
 	public void addFragment(Fragment fragment, String name) {
