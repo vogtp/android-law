@@ -92,7 +92,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 							Spanned fromHtml = Html.fromHtml(string);
 							TextView tv = (TextView) view;
 							tv.setText(fromHtml);
-							//							view.setVisibility(View.VISIBLE);
+							view.setVisibility(View.VISIBLE);
 							//							((View) view.getParent()).findViewById(R.id.tvLawTitle).setVisibility(View.GONE);
 							return true;
 						}
@@ -101,15 +101,10 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 					if (view instanceof TextView) {
 						String string = cursor.getString(fieldIdx);
 						if (string != null) {
-							Spanned fromHtml = Html.fromHtml(string);
 							TextView tvName = (TextView) view;
-							tvName.setText(cursor.getString(DB.Entries.INDEX_SHORT_NAME));
-							//							tvName.setVisibility(View.VISIBLE);
-							//							tvName.setTextColor(Color.WHITE);
+							tvName.setText(cursor.getString(DB.Entries.INDEX_SHORT_NAME) + " " + string);
 							TextView tvText = (TextView) ((View) view.getParent()).findViewById(R.id.tvLawText);
-							//							tvText.setVisibility(View.VISIBLE);
-							//							tvText.setTextColor(Color.WHITE);
-							tvText.setText(fromHtml);
+							tvText.setVisibility(View.VISIBLE);
 							return true;
 						}
 					}
