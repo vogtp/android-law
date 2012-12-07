@@ -22,9 +22,13 @@ import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.db.DB.Laws;
-import ch.bedesign.android.law.db.DbInitaliser;
 import ch.bedesign.android.law.helper.GuiUtils;
 import ch.bedesign.android.law.log.Logger;
+<<<<<<< HEAD
+=======
+import ch.bedesign.android.law.products.FreeLawProducts;
+import ch.bedesign.android.law.products.PaidLawProducts;
+>>>>>>> refs/remotes/origin/master
 
 public class LawPreference extends PreferenceActivity {
 
@@ -46,7 +50,7 @@ public class LawPreference extends PreferenceActivity {
 					Logger.w("Delete Entries");
 					getContentResolver().delete(Entries.CONTENT_URI, null, null);
 
-					DbInitaliser.initDb(LawPreference.this);
+					FreeLawProducts.initDb(LawPreference.this);
 					return false;
 				}
 			});
@@ -72,9 +76,15 @@ public class LawPreference extends PreferenceActivity {
 		findPreference(getString(R.string.prefKeyBuyMeABeer)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
 			public boolean onPreferenceClick(Preference preference) {
+<<<<<<< HEAD
 				//	LawProducts.initProducts(getApplicationContext());
 				//startActivity(BillingProductListActiviy.getIntent(LawPreference.this, LawBillingProductListActiviy.class, getString(R.string.prefBuyMeABeer),
 				//	LawProducts.PRODUCTS_BUYMEABEER));
+=======
+				new PaidLawProducts(LawPreference.this).loadProductsIfNotLoaded(getApplicationContext());
+				startActivity(BillingProductListActiviy.getIntent(LawPreference.this, LawBillingProductListActiviy.class, getString(R.string.prefBuyMeABeer),
+						PaidLawProducts.PRODUCTS_BUYMEABEER));
+>>>>>>> refs/remotes/origin/master
 				return true;
 			}
 		});
