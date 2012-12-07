@@ -22,5 +22,6 @@
     <string name="title_search">"Search: "</string>
     <string name="prefBuyMeABeer">Buy me a beer</string>
     <string name="prefKeyBuyMeABeer">prefKeyBuyMeABeer</string>
+    <string name="menuAddLaw">Add law</string>
 
 </resources>
