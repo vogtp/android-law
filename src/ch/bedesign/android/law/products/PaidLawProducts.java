@@ -13,7 +13,7 @@ import ch.bedesign.android.law.db.DB.Laws;
 import ch.bedesign.android.law.model.CountryModel;
 import ch.bedesign.android.law.model.LawModel;
 
-public class LawProducts extends BuyMeABeerProductsInitialiser implements PurchaseListener {
+public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements PurchaseListener {
 
 	public static final int PRODUCTS_LIST_LAWS = 1;
 
@@ -21,11 +21,11 @@ public class LawProducts extends BuyMeABeerProductsInitialiser implements Purcha
 
 	private Context ctx;
 
-	private LawProducts() {
+	private PaidLawProducts() {
 		super();
 	}
 
-	public LawProducts(Context ctx) {
+	public PaidLawProducts(Context ctx) {
 		this();
 		this.ctx = ctx.getApplicationContext();
 	}

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.db.DB.Laws;
+import ch.bedesign.android.law.model.EntriesModel;
 
 public class LawCrumbs extends LinearLayout {
 
@@ -40,8 +41,9 @@ public class LawCrumbs extends LinearLayout {
 		try {
 			cursorEntity = clEntity.loadInBackground();
 
-			if (cursorEntity.moveToFirst()) {
+			if (cursorEntity.moveToLast()) {
 				long pid = cursorEntity.getLong(Entries.INDEX_PARENT_ID);
+				EntriesModel em = new EntriesModel(cursorEntity);
 				if (pid < 0) {
 					// get law and return
 					long lawId = cursorEntity.getLong(Entries.INDEX_LAW_ID);

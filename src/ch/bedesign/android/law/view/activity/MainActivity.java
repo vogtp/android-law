@@ -24,7 +24,7 @@ import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
-import ch.bedesign.android.law.products.LawProducts;
+import ch.bedesign.android.law.products.PaidLawProducts;
 import ch.bedesign.android.law.view.adapter.SectionsPagerAdapter;
 import ch.bedesign.android.law.view.fragment.LawDisplayFragment;
 import ch.bedesign.android.law.view.fragment.SearchFragment;
@@ -120,12 +120,12 @@ public class MainActivity extends FragmentActivity {
 			return true;
 
 		case R.id.itemAddLaw:
-			LawProducts lawProducts = new LawProducts(this);
+			PaidLawProducts lawProducts = new PaidLawProducts(this);
 			lawProducts.loadProductsIfNotLoaded(getApplicationContext());
 			ProductManager productManager = ProductManager.getInstance(this);
 			productManager.addPurchaseListener(lawProducts);
 			startActivity(BillingProductListActiviy.getIntent(this, LawBillingProductListActiviy.class, getString(R.string.menuAddLaw),
-					LawProducts.PRODUCTS_LIST_LAWS));
+					PaidLawProducts.PRODUCTS_LIST_LAWS));
 			return true;
 
 		case R.id.itemSearch:
