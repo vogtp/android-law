@@ -10,14 +10,13 @@ import ch.bedesign.android.law.model.LawModel;
 
 public class DbInitaliser {
 
-	public static final String CODE_VERFASSUNG = "101";
-	public static final String CODE_OR = "220";
-	public static final String CODE_ZGB = "210";
-	public static final String CODE_STGB = "311_0";
+	private static final String CODE_VERFASSUNG = "101";
+	private static final String CODE_OR = "220";
+	private static final String CODE_ZGB = "210";
+	private static final String CODE_STGB = "311_0";
 
 	public static final void initDb(Context ctx) {
 
-		//FIXME ask muriel is BV correct
 		insertLawIfNotExists(ctx, CODE_VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "BV", "http://www.admin.ch/ch/d/sr/101/");
 		insertLawIfNotExists(ctx, CODE_OR, "Obligationenrecht", "OR", "http://www.admin.ch/ch/d/sr/220/");
 		insertLawIfNotExists(ctx, CODE_ZGB, "Schweizerisches Zivilgesetzbuch", "ZGB", "http://www.admin.ch/ch/d/sr/210/");
