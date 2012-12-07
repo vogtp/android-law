@@ -17,7 +17,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.widget.Toast;
-import ch.almana.android.billing.view.activity.BillingProductListActiviy;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
@@ -25,7 +24,6 @@ import ch.bedesign.android.law.db.DB.Laws;
 import ch.bedesign.android.law.db.DbInitaliser;
 import ch.bedesign.android.law.helper.GuiUtils;
 import ch.bedesign.android.law.log.Logger;
-import ch.bedesign.android.law.products.LawProducts;
 
 public class LawPreference extends PreferenceActivity {
 
@@ -73,9 +71,9 @@ public class LawPreference extends PreferenceActivity {
 		findPreference(getString(R.string.prefKeyBuyMeABeer)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
 			public boolean onPreferenceClick(Preference preference) {
-				LawProducts.initProducts(getApplicationContext());
-				startActivity(BillingProductListActiviy.getIntent(LawPreference.this, LawBillingProductListActiviy.class, getString(R.string.prefBuyMeABeer),
-						LawProducts.PRODUCTS_BUYMEABEER));
+				//	LawProducts.initProducts(getApplicationContext());
+				//startActivity(BillingProductListActiviy.getIntent(LawPreference.this, LawBillingProductListActiviy.class, getString(R.string.prefBuyMeABeer),
+				//	LawProducts.PRODUCTS_BUYMEABEER));
 				return true;
 			}
 		});
