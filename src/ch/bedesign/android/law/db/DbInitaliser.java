@@ -17,6 +17,7 @@ public class DbInitaliser {
 
 	public static final void initDb(Context ctx) {
 
+		insertLawIfNotExists(ctx, "0_101", "Menschenrechte", "EMRK", "http://www.admin.ch/ch/d/sr/0_101/");
 		insertLawIfNotExists(ctx, CODE_VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "BV", "http://www.admin.ch/ch/d/sr/101/");
 		insertLawIfNotExists(ctx, CODE_OR, "Obligationenrecht", "OR", "http://www.admin.ch/ch/d/sr/220/");
 		insertLawIfNotExists(ctx, CODE_ZGB, "Schweizerisches Zivilgesetzbuch", "ZGB", "http://www.admin.ch/ch/d/sr/210/");
