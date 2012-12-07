@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,14 +9,14 @@
         android:id="@+id/tvLawTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="7dp" android:text="Title"
+        android:padding="7dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="italic" />
 
     <TextView
         android:id="@+id/tvLawText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="Text"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

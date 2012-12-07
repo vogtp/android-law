@@ -1,6 +1,7 @@
 package ch.bedesign.android.law.view.fragment;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -64,8 +65,8 @@ public class SearchFragment extends ListFragment implements ILawFragment, Loader
 		getLoaderManager().initLoader(QUERY_EXACT, null, this);
 	}
 
-	public String getName() {
-		return getString(R.string.title_search) + " " + searchQuery;
+	public String getName(Context ctx) {
+		return ctx.getString(R.string.title_search) + " " + searchQuery;
 	}
 
 	public boolean onBackPressed() {

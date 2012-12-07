@@ -18,10 +18,13 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import ch.almana.android.billing.ProductManager;
+import ch.almana.android.billing.view.activity.BillingProductListActiviy;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.LawModel;
+import ch.bedesign.android.law.products.LawProducts;
 import ch.bedesign.android.law.view.adapter.SectionsPagerAdapter;
 import ch.bedesign.android.law.view.fragment.LawDisplayFragment;
 import ch.bedesign.android.law.view.fragment.SearchFragment;
@@ -51,9 +54,12 @@ public class MainActivity extends FragmentActivity {
 		if (Logger.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setSubtitle("DEBUG MODE" + " (" + SettingsLaw.getInstance(this).getVersionName() + ")");
 		}
+		if (SettingsLaw.getInstance(this).hasHoloTheme()) {
+			getActionBar().setBackgroundDrawable(getResources().getDrawable(android.R.drawable.dark_header));
+		}
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_title_strip);
-		//		pagerTabStrip.setDrawFullUnderline(true);
+		pagerTabStrip.setDrawFullUnderline(true);
 		sectionsPagerAdapter = new SectionsPagerAdapter(viewPager, getSupportFragmentManager());
 
 		viewPager.setAdapter(sectionsPagerAdapter);
@@ -70,9 +76,6 @@ public class MainActivity extends FragmentActivity {
 			sectionsPagerAdapter.addFragment(sf, getString(R.string.title_search) + " " + searchQuery);
 			// set current item to search
 			currentItem = 1;
-			//			args.remove(STATE_CURRENT_ITEM);
-			//			args.putInt(STATE_CURRENT_ITEM, 1);
-			//			viewPager.setCurrentItem(1);
 			getIntent().setAction(Intent.ACTION_DEFAULT);
 		}
 		restoreFromBundle(restoreBundle);
@@ -114,6 +117,15 @@ public class MainActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.itemClose:
 			closeCurrentFragment();
+			return true;
+
+		case R.id.itemAddLaw:
+			LawProducts lawProducts = new LawProducts(this);
+			lawProducts.loadProductsIfNotLoaded(getApplicationContext());
+			ProductManager productManager = ProductManager.getInstance(this);
+			productManager.addPurchaseListener(lawProducts);
+			startActivity(BillingProductListActiviy.getIntent(this, LawBillingProductListActiviy.class, getString(R.string.menuAddLaw),
+					LawProducts.PRODUCTS_LIST_LAWS));
 			return true;
 
 		case R.id.itemSearch:

@@ -1,5 +1,6 @@
 package ch.bedesign.android.law.view.fragment;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -129,7 +130,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		getLoaderManager().restartLoader(LOADER_ENTRIES_LIST, null, this);
 	}
 
-	public String getName() {
+	public String getName(Context ctx) {
 		return getLawName();
 	}
 

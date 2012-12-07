@@ -27,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		this.fragmentManager = fm;
 		LawsOverviewFragment lawsOverviewFragment = new LawsOverviewFragment();
 		pages.add(0, lawsOverviewFragment);
-		names.add(0, lawsOverviewFragment.getName());
+		names.add(0, lawsOverviewFragment.getName(viewPager.getContext()));
 	}
 
 	@Override

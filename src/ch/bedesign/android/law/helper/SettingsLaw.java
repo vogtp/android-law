@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.log.Logger;
@@ -54,6 +55,10 @@ public class SettingsLaw {
 
 	private boolean getBooleanPreference(int prefKey, boolean defValue) {
 		return getPreferences().getBoolean(ctx.getString(prefKey), defValue);
+	}
+
+	public boolean hasHoloTheme() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 	}
 
 	public boolean isContinueUpdatesAtStartup() {
