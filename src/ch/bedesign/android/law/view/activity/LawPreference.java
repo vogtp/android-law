@@ -29,7 +29,6 @@ import ch.bedesign.android.law.products.LawProducts;
 
 public class LawPreference extends PreferenceActivity {
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,7 +72,7 @@ public class LawPreference extends PreferenceActivity {
 		findPreference(getString(R.string.prefKeyBuyMeABeer)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
 			public boolean onPreferenceClick(Preference preference) {
-				LawProducts.initProducts(getApplicationContext());
+				new LawProducts(LawPreference.this).loadProductsIfNotLoaded(getApplicationContext());
 				startActivity(BillingProductListActiviy.getIntent(LawPreference.this, LawBillingProductListActiviy.class, getString(R.string.prefBuyMeABeer),
 						LawProducts.PRODUCTS_BUYMEABEER));
 				return true;
