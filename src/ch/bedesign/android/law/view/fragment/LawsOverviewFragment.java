@@ -12,6 +12,8 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +34,6 @@ import ch.bedesign.android.law.view.widget.DbUpdateProgressBar;
 public class LawsOverviewFragment extends ListFragment implements ILawFragment, LoaderCallbacks<Cursor> {
 
 	private SimpleCursorAdapter adapter;
-
-	//	private final SectionsPagerAdapter pagerAdapter;
-
-	//	public LawsOverviewFragment(SectionsPagerAdapter pagerAdapter) {
-	//		this.pagerAdapter = pagerAdapter;
-	//	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -142,7 +138,7 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 			return false;
 		}
 
-		//		final Uri uri = ContentUris.withAppendedId(DB.VirtualGovernor.CONTENT_URI, info.id);
+		//		final Uri uri = ContentUris.withAppendedId(Laws.CONTENT_URI, info.id);
 		switch (item.getItemId()) {
 		case R.id.itemClearCache:
 			ContentResolver resolver = getActivity().getContentResolver();
@@ -162,4 +158,10 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 
 		return super.onContextItemSelected(item);
 	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.law_add, menu);
+	};
 }
