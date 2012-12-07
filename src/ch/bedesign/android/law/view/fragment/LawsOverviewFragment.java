@@ -2,6 +2,7 @@ package ch.bedesign.android.law.view.fragment;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -80,8 +81,8 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		}
 	}
 
-	public String getName() {
-		return "Gesetze";
+	public String getName(Context ctx) {
+		return ctx.getString(R.string.frag_title_gesetze);
 	}
 
 	
