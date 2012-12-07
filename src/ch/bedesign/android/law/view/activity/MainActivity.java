@@ -96,7 +96,7 @@ public class MainActivity extends FragmentActivity {
 				addLawDisplayFragment(intent.getExtras());
 			}
 		};
-		registerReceiver(searchResultReceiver , displaySearchResult);
+		registerReceiver(searchResultReceiver, displaySearchResult);
 	}
 
 	@Override
@@ -160,25 +160,32 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-
 		if (!sectionsPagerAdapter.onBackPressed()) {
-			AlertDialog.Builder builder = new Builder(this);
-			builder.setTitle(R.string.titleCloseDialog);
-			builder.setMessage(R.string.msgCloseDialog);
-			builder.setPositiveButton(android.R.string.yes, new OnClickListener() {
-
-				public void onClick(DialogInterface dialog, int which) {
-					finish();
+			if (true) {
+				if (viewPager.getCurrentItem() == 0) {
+					super.onBackPressed();
+				} else {
+					closeCurrentFragment();
 				}
-			});
-			builder.setNeutralButton(R.string.buNeutralCloseDialog, new OnClickListener() {
+			} else {
+				AlertDialog.Builder builder = new Builder(this);
+				builder.setTitle(R.string.titleCloseDialog);
+				builder.setMessage(R.string.msgCloseDialog);
+				builder.setPositiveButton(android.R.string.yes, new OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
-					viewPager.setCurrentItem(0);
-				}
-			});
-			builder.setNegativeButton(android.R.string.no, null);
-			builder.create().show();
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				});
+				builder.setNeutralButton(R.string.buNeutralCloseDialog, new OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						viewPager.setCurrentItem(0);
+					}
+				});
+				builder.setNegativeButton(android.R.string.no, null);
+				builder.create().show();
+			}
 		}
 	}
 
