@@ -78,7 +78,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		if (pos > 0 && pos < pages.size()) {
 			Fragment fragment = pages.remove(pos);
 			names.remove(pos);
-			destroyItem(viewPager, pos, fragment);
+			//destroyItem(viewPager, pos, fragment);
 			notifyDataSetChanged();
 		}
 	}
