@@ -54,9 +54,12 @@ public class MainActivity extends FragmentActivity {
 		if (Logger.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setSubtitle("DEBUG MODE" + " (" + SettingsLaw.getInstance(this).getVersionName() + ")");
 		}
+		if (SettingsLaw.getInstance(this).hasHoloTheme()) {
+			getActionBar().setBackgroundDrawable(getResources().getDrawable(android.R.drawable.dark_header));
+		}
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_title_strip);
-		//		pagerTabStrip.setDrawFullUnderline(true);
+		pagerTabStrip.setDrawFullUnderline(true);
 		sectionsPagerAdapter = new SectionsPagerAdapter(viewPager, getSupportFragmentManager());
 
 		viewPager.setAdapter(sectionsPagerAdapter);
@@ -73,9 +76,6 @@ public class MainActivity extends FragmentActivity {
 			sectionsPagerAdapter.addFragment(sf, getString(R.string.title_search) + " " + searchQuery);
 			// set current item to search
 			currentItem = 1;
-			//			args.remove(STATE_CURRENT_ITEM);
-			//			args.putInt(STATE_CURRENT_ITEM, 1);
-			//			viewPager.setCurrentItem(1);
 			getIntent().setAction(Intent.ACTION_DEFAULT);
 		}
 		restoreFromBundle(restoreBundle);
