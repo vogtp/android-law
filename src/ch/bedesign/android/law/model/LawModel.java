@@ -62,9 +62,9 @@ public class LawModel implements Parcelable {
 
 	private LawModel() {
 		this.id = -1;
-		this.code = "none";
-		this.name = "none";
-		this.shortName = "none";
+		//		this.code = "none";
+		//		this.name = "none";
+		//		this.shortName = "none";
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
