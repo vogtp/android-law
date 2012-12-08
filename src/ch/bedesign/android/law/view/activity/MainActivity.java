@@ -133,7 +133,7 @@ public class MainActivity extends FragmentActivity {
 			saveToBundle(bundle);
 			String initalQuery = null;
 			if (Logger.DEBUG) {
-				initalQuery = "Mord";
+				initalQuery = "ehe";
 			}
 			startSearch(initalQuery, true, bundle, false);
 			return true;
