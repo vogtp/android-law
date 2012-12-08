@@ -10,6 +10,12 @@ import ch.bedesign.android.law.model.LawModel;
 
 public class FreeLawProducts implements LawCodes {
 
+	/**
+	 * Initialise law products which are free of chrage here
+	 * 
+	 * @param ctx
+	 *            Context as from getContext()
+	 */
 	public static final void initDb(Context ctx) {
 		// free laws:
 		insertLawIfNotExists(ctx, LawCodes.EMRK, "Menschenrechte", "EMRK", "http://www.admin.ch/ch/d/sr/0_101/");
@@ -20,6 +26,24 @@ public class FreeLawProducts implements LawCodes {
 
 	}
 
+	/**
+	 * Helper to insert a law
+	 * 
+	 * @param ctx
+	 *            Context as from getContext()
+	 * @param code
+	 *            a constant from {@link LawCodes} with the value of the
+	 *            SR-Nummer having the name of the abbreviation of the law (e.g.
+	 *            OR)
+	 * @param name
+	 *            The name of the law (e.g. Obligationenrecht)
+	 * @param shortName
+	 *            the abbreviation of the law (e.g. OR)
+	 * @param url
+	 *            A url string pointing to the page of the law (without
+	 *            index.html if possible) (e.g.
+	 *            http://www.admin.ch/ch/d/sr/220/)
+	 */
 	private static void insertLawIfNotExists(Context ctx, String code, String name, String shortName, String url) {
 		ContentResolver resolver = ctx.getContentResolver();
 		if (hasThisLaw(resolver, code)) {
@@ -28,6 +52,15 @@ public class FreeLawProducts implements LawCodes {
 		}
 	}
 
+	/**
+	 * Check if the law already exists
+	 * 
+	 * @param resolver
+	 *            DB {@link ContentResolver} get with
+	 *            getContext().getContentResolver() {@link ContentResolver}
+	 * @param code
+	 * @return
+	 */
 	private static boolean hasThisLaw(ContentResolver resolver, String code) {
 		Cursor cursor = resolver.query(Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, Laws.SELECTION_CODE, new String[] { code }, Laws.SORTORDER_DEFAULT);
 		return cursor == null || cursor.getCount() == 0;

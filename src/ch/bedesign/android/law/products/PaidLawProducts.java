@@ -22,6 +22,12 @@ public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements Pu
 
 	private Context ctx;
 
+	/**
+	 * Initialise paid law products here
+	 * 
+	 * @param ctx
+	 *            Context as from getContext()
+	 */
 	private void initLawProductList(Context ctx) {
 		if (lawProductsList != null) {
 			return;
@@ -32,6 +38,7 @@ public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements Pu
 		//	lawProductsList.put("law.", getLaw(ctx, LawCodes., "", "", ""));
 	}
 
+	// hide default constructor 
 	private PaidLawProducts() {
 		super();
 	}
