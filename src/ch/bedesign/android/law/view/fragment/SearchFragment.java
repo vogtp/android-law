@@ -10,13 +10,10 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
@@ -47,20 +44,23 @@ public class SearchFragment extends ListFragment implements ILawFragment, Loader
 		super.onActivityCreated(savedInstanceState);
 		setListShown(false);
 		adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
-				new String[] { DB.Entries.NAME_FULL_NAME, DB.Entries.NAME_NAME },
+				new String[] { DB.Entries.NAME_NAME, DB.Entries.NAME_FULL_NAME },
 				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
 
-		ViewBinder viewBinder = new ViewBinder() {
-
-			public boolean setViewValue(View v, Cursor c, int idx) {
-				if (idx == Entries.INDEX_NAME) {
-					((TextView) v).setText(Html.fromHtml(c.getString(idx)));
-					return true;
-				}
-				return false;
-			}
-		};
-		adapter.setViewBinder(viewBinder);
+		//		ViewBinder viewBinder = new ViewBinder() {
+		//
+		//			public boolean setViewValue(View v, Cursor c, int idx) {
+		//				if (idx == Entries.INDEX_NAME) {
+		//					TextView tvName = (TextView) v;
+		//					tvName.setText(c.getString(DB.Entries.INDEX_SHORT_NAME) + " " + c.getString(idx));
+		//					//					TextView tvText = (TextView) ((View) v.getParent()).findViewById(R.id.tvLawText);
+		//					//					tvText.setVisibility(View.VISIBLE);
+		//					return true;
+		//				}
+		//				return false;
+		//			}
+		//		};
+		//		adapter.setViewBinder(viewBinder);
 		setListAdapter(adapter);
 		getLoaderManager().initLoader(QUERY_EXACT, null, this);
 	}
