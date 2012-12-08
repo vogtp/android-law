@@ -15,11 +15,22 @@ import ch.bedesign.android.law.model.LawModel;
 
 public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements PurchaseListener {
 
+
 	public static final int PRODUCTS_LIST_LAWS = 1;
 
 	private HashMap<String, LawModel> lawProductsList;
 
 	private Context ctx;
+
+	private void initLawProductList(Context ctx) {
+		if (lawProductsList != null) {
+			return;
+		}
+		lawProductsList = new HashMap<String, LawModel>();
+		lawProductsList.put("law.VStrR", getLaw(ctx, LawCodes.VSTRR, "Verwaltungsstrafrecht", "VStrR", "http://www.admin.ch/ch/d/sr/313_0/"));
+		lawProductsList.put("law.StPO", getLaw(ctx, LawCodes.STPO, "Strafprozessordnung", "StPO", "http://www.admin.ch/ch/d/sr/312_0/"));
+		//	lawProductsList.put("law.", getLaw(ctx, LawCodes., "", "", ""));
+	}
 
 	private PaidLawProducts() {
 		super();
@@ -44,16 +55,6 @@ public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements Pu
 		}
 		return productList;
 
-	}
-
-	private void initLawProductList(Context ctx) {
-		if (lawProductsList != null) {
-			return;
-		}
-		lawProductsList = new HashMap<String, LawModel>();
-		lawProductsList.put("law.VStrR", getLaw(ctx, "313_0", "Verwaltungsstrafrecht", "VStrR", "http://www.admin.ch/ch/d/sr/313_0/"));
-		lawProductsList.put("law.StPO", getLaw(ctx, "312_0", "Strafprozessordnung", "StPO", "http://www.admin.ch/ch/d/sr/312_0/"));
-		//	lawProductsList.put("law.", getLaw(ctx, "", "", "", ""));
 	}
 
 	private LawModel getLaw(Context ctx, String code, String name, String shortName, String url) {
