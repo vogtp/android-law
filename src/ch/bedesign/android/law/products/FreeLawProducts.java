@@ -8,7 +8,7 @@ import ch.bedesign.android.law.db.DB.Laws;
 import ch.bedesign.android.law.model.CountryModel;
 import ch.bedesign.android.law.model.LawModel;
 
-public class FreeLawProducts implements LawCodes {
+public class FreeLawProducts {
 
 	/**
 	 * Initialise law products which are free of chrage here
@@ -19,10 +19,10 @@ public class FreeLawProducts implements LawCodes {
 	public static final void initDb(Context ctx) {
 		// free laws:
 		insertLawIfNotExists(ctx, LawCodes.EMRK, "Menschenrechte", "EMRK", "http://www.admin.ch/ch/d/sr/0_101/");
-		insertLawIfNotExists(ctx, VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "BV", "http://www.admin.ch/ch/d/sr/101/");
-		insertLawIfNotExists(ctx, OR, "Obligationenrecht", "OR", "http://www.admin.ch/ch/d/sr/220/");
-		insertLawIfNotExists(ctx, ZGB, "Schweizerisches Zivilgesetzbuch", "ZGB", "http://www.admin.ch/ch/d/sr/210/");
-		insertLawIfNotExists(ctx, STGB, "Schweizerisches Strafgesetzbuch", "StGB", "http://www.admin.ch/ch/d/sr/311_0/");
+		insertLawIfNotExists(ctx, LawCodes.VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "BV", "http://www.admin.ch/ch/d/sr/101/");
+		insertLawIfNotExists(ctx, LawCodes.OR, "Obligationenrecht", "OR", "http://www.admin.ch/ch/d/sr/220/");
+		insertLawIfNotExists(ctx, LawCodes.ZGB, "Schweizerisches Zivilgesetzbuch", "ZGB", "http://www.admin.ch/ch/d/sr/210/");
+		insertLawIfNotExists(ctx, LawCodes.STGB, "Schweizerisches Strafgesetzbuch", "StGB", "http://www.admin.ch/ch/d/sr/311_0/");
 
 	}
 
