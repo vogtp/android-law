@@ -41,37 +41,61 @@ public class Parser {
 			Document doc = Jsoup.connect(urlText).timeout(10000).get();
 			Elements links = doc.select("A[NAME]");
 			long parentIdFirstLevel = -1;
-			long idHead_1 = -1;
-			long idHead_2 = 0;
-			long idHead_3 = 0;
-			long idHead_4 = 0;
-			long subIdHead_1 = -1;
-			long subIdHead_2 = 0;
-			long subIdHead_3 = 0;
-			long subIdHead_4 = 0;
-			long subIdHead_5 = 0;
+
+			long level1 = -1;
+			long level2 = 0;
+			long level3 = 0;
+			long level4 = 0;
+
+			long subLevel1 = 0;
+			long subLevel2 = 0;
+			long subLevel3 = 0;
+			long subLevel4 = 0;
+
 			for (Element link : links) {
 				if (link.attr("name").contains("id")) {
 					if (link.attr("abs:href") == "") {
 						EntriesModel em = new EntriesModel(lawId, -1);
-						em.setName(link.nextElementSibling().text());
+						em.setName(link.nextElementSibling().text().trim());
 						em.setShortName("");
 						em.setFullName(law.getShortName());
 						// find right Parent_id
-						if (Integer.parseInt(link.nextElementSibling().toString().substring(2, 3)) == 1) {
-							em.setParentId(idHead_1);
+						String elementName = link.attr("Name");
+						elementName = elementName.replace("id-", "");
+
+						int matches = countMatches(elementName, "-");
+
+						if (matches == 0) {
+							em.setParentId(level1);
 							parentIdFirstLevel = insert(em);
-							idHead_2 = parentIdFirstLevel;
-						}else if(Integer.parseInt(link.nextElementSibling().toString().substring(2, 3)) == 2) {
-							em.setParentId(idHead_2);
+							level2 = parentIdFirstLevel;
+						} else if (matches == 1) {
+							em.setParentId(level2);
 							parentIdFirstLevel = insert(em);
-							idHead_3 = parentIdFirstLevel;
-						}else if(Integer.parseInt(link.nextElementSibling().toString().substring(2, 3)) == 3) {
-							em.setParentId(idHead_3);
+							level3 = parentIdFirstLevel;
+						} else if (matches == 2) {
+							em.setParentId(level3);
 							parentIdFirstLevel = insert(em);
-							idHead_4 = parentIdFirstLevel;
+							level4 = parentIdFirstLevel;
+						} else if (matches == 3) {
+							em.setParentId(level4);
+							parentIdFirstLevel = insert(em);
+							//level4 = parentIdFirstLevel;
 						}
-						
+
+						if (link.attr("name").contains("id-final")) {
+							Element end = link.parent();
+							String endText = end.html();
+							int start = endText.indexOf("/h4");
+							endText = endText.substring(start + 5);
+							EntriesModel emEnd = new EntriesModel(lawId, parentIdFirstLevel);
+							emEnd.setName(link.nextElementSibling().text().trim());
+							emEnd.setShortName("");
+							emEnd.setFullName(law.getShortName());
+							emEnd.setText(endText);
+							insert(emEnd);
+						}
+
 					} else if (link.attr("abs:href").contains("index")) {
 						EntriesModel em = new EntriesModel(lawId, parentIdFirstLevel);
 						em.setUrl(link.attr("abs:href"));
@@ -82,50 +106,51 @@ public class Parser {
 						Document subdoc = Jsoup.connect(link.attr("abs:href")).timeout(10000).get();
 						Elements subLinks = subdoc.select("A[Name]");
 						long parentIdThirdLevel = parentIdSecondLevel;
+						subLevel1 = parentIdSecondLevel;
 						for (Element subLink : subLinks) {
-							if (subLink.attr("abs:href") == "") {
-								// Entries Model (Gesetz ID, Parent Id,url, Name Gesetz???, Kurztext, Fullname, Text(Artikel selbst), sequence (long))
-								EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
-								subIdHead_1 = parentIdSecondLevel;
-								emThirdLevel.setName(subLink.nextElementSibling().text());
-								emThirdLevel.setShortName("");
-								emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
+							if (subLink.attr("name").contains("id")) {
+								if (subLink.attr("abs:href") == "") {
+									// Entries Model (Gesetz ID, Parent Id,url, Name Gesetz???, Kurztext, Fullname, Text(Artikel selbst), sequence (long))
+									EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
+									emThirdLevel.setName(subLink.nextElementSibling().text().trim());
+									emThirdLevel.setShortName("");
+									emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
 
-								// find right Parent_id
-								if (Integer.parseInt(subLink.nextElementSibling().toString().substring(2, 3)) == 1) {
-									emThirdLevel.setParentId(subIdHead_1);
-									parentIdSecondLevel = insert(emThirdLevel);
-									subIdHead_2 = parentIdSecondLevel;
-								} else if (Integer.parseInt(subLink.nextElementSibling().toString().substring(2, 3)) == 2) {
-									emThirdLevel.setParentId(subIdHead_2);
-									parentIdSecondLevel = insert(emThirdLevel);
-									subIdHead_3 = parentIdSecondLevel;
-								} else if (Integer.parseInt(subLink.nextElementSibling().toString().substring(2, 3)) == 3) {
-									emThirdLevel.setParentId(subIdHead_3);
-									parentIdSecondLevel = insert(emThirdLevel);
-									subIdHead_4 = parentIdSecondLevel;
-								} else if (Integer.parseInt(subLink.nextElementSibling().toString().substring(2, 3)) == 4) {
-									emThirdLevel.setParentId(subIdHead_4);
-									parentIdSecondLevel = insert(emThirdLevel);
-									subIdHead_5 = parentIdSecondLevel;
+									// find right Parent_id
+									String subElementName = subLink.attr("Name");
+									subElementName = subElementName.replace("id-", "");
+
+									int matches = countMatches(subElementName, "-");
+
+									if (matches == 1) {
+										emThirdLevel.setParentId(subLevel1);
+										parentIdThirdLevel = insert(emThirdLevel);
+										subLevel2 = parentIdThirdLevel;
+									} else if (matches == 2) {
+										emThirdLevel.setParentId(subLevel2);
+										parentIdThirdLevel = insert(emThirdLevel);
+										subLevel3 = parentIdThirdLevel;
+									} else if (matches == 3) {
+										emThirdLevel.setParentId(subLevel3);
+										parentIdThirdLevel = insert(emThirdLevel);
+										subLevel4 = parentIdThirdLevel;
+									}
+
+								} else {
+									EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdThirdLevel);
+									emThirdLevel.setUrl(subLink.attr("abs:href"));
+									String name = subLink.text().substring(subLink.select("B").text().length());
+									emThirdLevel.setName(name);
+									emThirdLevel.setShortName(subLink.select("B").text());
+									emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
+									long parentIdFourthLevel = insert(emThirdLevel);
+									EntriesModel entrie = parseArticleText(subLink.attr("abs:href"), parentIdFourthLevel);
+									if (entrie != null) {
+										entrie.setFullName(law.getShortName() + "/" + link.text() + "/" + name);
+										entrie.setShortName("");
+										insert(entrie);
+									}
 								}
-							} else {
-								EntriesModel emThirdLevel = new EntriesModel(lawId, parentIdSecondLevel);
-								emThirdLevel.setUrl(subLink.attr("abs:href"));
-								String name = subLink.text().substring(subLink.select("B").text().length());
-								emThirdLevel.setName(name);
-								emThirdLevel.setShortName(subLink.select("B").text());
-								emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
-								parentIdThirdLevel = insert(emThirdLevel);
-								EntriesModel entrie = parseArticleText(subLink.attr("abs:href"), parentIdThirdLevel);
-								if (entrie != null) {
-									entrie.setFullName(law.getShortName() + "/" + link.text() + "/" + name);
-									entrie.setShortName("");
-									insert(entrie);
-								}
-							}
-							if (subLink.attr("abs:href").contains("110")) {
-								long id = 1;
 							}
 						}
 					} else {
@@ -166,7 +191,7 @@ public class Parser {
 				String text = "";
 				Elements arts = artikel.select("p");
 				for (Element art : arts) {
-					text = text + "<br><br>" + art.text();
+					text = text + "<br><br>" + art.html();
 				}
 				text = text.substring(8);
 				entrie = new EntriesModel(lawId, parentId, "", name, "", "", text, 0);
@@ -201,6 +226,19 @@ public class Parser {
 		}
 
 		return lawVersion;
+	}
+
+	private static int countMatches(String source, String part)
+	{
+		if (source == null || part == null) {
+			return 0;
+		}
+		int count = 0;
+
+		for (int pos = 0; (pos = source.indexOf(part, pos)) != -1; count++)
+			pos += part.length();
+
+		return count;
 	}
 
 }
