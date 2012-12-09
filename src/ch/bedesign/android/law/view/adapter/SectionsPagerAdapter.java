@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import ch.almana.android.util.StringUtils;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.model.LawModel;
@@ -27,7 +28,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		this.fragmentManager = fm;
 		LawsOverviewFragment lawsOverviewFragment = new LawsOverviewFragment();
 		pages.add(0, lawsOverviewFragment);
-		names.add(0, lawsOverviewFragment.getName(viewPager.getContext()));
+		names.add(0, viewPager.getContext().getString(R.string.frag_title_gesetze));
 	}
 
 	@Override
