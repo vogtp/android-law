@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import ch.almana.android.util.StringUtils;
 import ch.bedesign.android.law.R;
 import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.model.LawModel;
@@ -79,7 +78,9 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		if (pos > 0 && pos < pages.size()) {
 			Fragment fragment = pages.remove(pos);
 			names.remove(pos);
-			destroyItem(viewPager, pos, fragment);
+			if (fragment != null) {
+				destroyItem(viewPager, pos, fragment);
+			}
 			notifyDataSetChanged();
 		}
 	}
