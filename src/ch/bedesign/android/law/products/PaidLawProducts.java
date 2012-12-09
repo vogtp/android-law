@@ -50,6 +50,7 @@ public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements Pu
 
 	@Override
 	protected void addProductListsToManager(Context ctx) {
+		super.addProductListsToManager(ctx);
 		productManager.addProducts(PRODUCTS_LIST_LAWS, getLaws(ctx));
 	}
 
