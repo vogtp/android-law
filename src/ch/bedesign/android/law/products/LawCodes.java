@@ -10,6 +10,8 @@ public interface LawCodes {
 	// Privatrecht - Zivilrechtspflege - Vollstreckung
 	public static final String OR = "220";
 	public static final String ZGB = "210";
+	public static final String ZPO = "272";
+	public static final String URG = "231_1";
 
 	// Strafrecht - Strafrechtspflege - Strafvollzug
 	public static final String STGB = "311_0";
