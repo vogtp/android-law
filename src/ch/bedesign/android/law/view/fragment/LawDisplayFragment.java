@@ -32,7 +32,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 	public static final String ARG_PARENT_ID = "parentId";
 
 	private static final int LOADER_ENTRIES_LIST = 1;
-	private static final int LOADER_GET_PARTENTID = 2;
+	private static final int LOADER_GO_ONE_LEVEL_BACK = 2;
 
 	private SimpleCursorAdapter adapter;
 	private LawModel law = LawModel.DUMMY;
@@ -93,8 +93,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 							Spanned fromHtml = Html.fromHtml(string);
 							TextView tv = (TextView) view;
 							tv.setText(fromHtml);
-							view.setVisibility(View.VISIBLE);
-							//							((View) view.getParent()).findViewById(R.id.tvLawTitle).setVisibility(View.GONE);
 							return true;
 						}
 					}
@@ -105,7 +103,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 							TextView tvName = (TextView) view;
 							tvName.setText(cursor.getString(DB.Entries.INDEX_SHORT_NAME) + " " + string);
 							TextView tvText = (TextView) ((View) view.getParent()).findViewById(R.id.tvLawText);
-							tvText.setVisibility(View.VISIBLE);
 							return true;
 						}
 					}
@@ -136,7 +133,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 
 	public Loader<Cursor> onCreateLoader(int loader, Bundle bundle) {
 		switch (loader) {
-		case LOADER_GET_PARTENTID:
+		case LOADER_GO_ONE_LEVEL_BACK:
 			return new CursorLoader(getActivity(), DB.Entries.CONTENT_URI, DB.Entries.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, new String[] { Long.toString(parentId) },
 					DB.Entries.SORTORDER_DEFAULT);
 		case LOADER_ENTRIES_LIST:
@@ -148,9 +145,10 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		switch (loader.getId()) {
-		case LOADER_GET_PARTENTID:
+		case LOADER_GO_ONE_LEVEL_BACK:
 			if (c.moveToFirst()) {
 				parentId = c.getLong(DB.Entries.INDEX_PARENT_ID);
+				// go one level back
 				getLoaderManager().restartLoader(LOADER_ENTRIES_LIST, null, this);
 			}
 			break;
@@ -181,7 +179,7 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		if (parentId == -1) {
 			return false;
 		}
-		getLoaderManager().restartLoader(LOADER_GET_PARTENTID, null, this);
+		getLoaderManager().restartLoader(LOADER_GO_ONE_LEVEL_BACK, null, this);
 		return true;
 	}
 
