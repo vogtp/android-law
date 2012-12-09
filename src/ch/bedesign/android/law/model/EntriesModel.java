@@ -2,6 +2,7 @@ package ch.bedesign.android.law.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import ch.almana.android.util.StringUtils;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
 
@@ -128,6 +129,17 @@ public class EntriesModel {
 
 	public long getId() {
 		return id;
+	}
+
+	@Override
+	public String toString() {
+		if (!StringUtils.isEmpty(fullName)) {
+			return fullName;
+		}
+		if (!StringUtils.isEmpty(name)) {
+			return name;
+		}
+		return super.toString();
 	}
 
 }
