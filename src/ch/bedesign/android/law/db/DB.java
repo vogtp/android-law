@@ -127,8 +127,8 @@ public interface DB {
 		public static final String[] PROJECTION_DEFAULT = new String[] { NAME_ID, NAME_CODE, NAME_NAME, NAME_COUNTRY_ID, NAME_VERSION, NAME_URL, NAME_LAST_CHECK, NAME_IS_UPDATING,
 				NAME_SHORT_NAME };
 
-		public static final String SORTORDER_DEFAULT = NAME_NAME + " DESC";
-		public static final String SORTORDER_REVERSE = NAME_NAME + " ASC";
+		public static final String SORTORDER_DEFAULT = NAME_NAME + " ASC";
+		public static final String SORTORDER_REVERSE = NAME_NAME + " DESC";
 
 		public static final String CONTENT_URI_STRING = "content://" + AUTHORITY + "/" + CONTENT_ITEM_NAME;
 		public static final Uri CONTENT_URI = Uri.parse(CONTENT_URI_STRING);
