@@ -3,9 +3,8 @@ package ch.bedesign.android.law.products;
 import java.util.HashMap;
 
 import android.content.Context;
-import ch.almana.android.billing.backend.BillingManager.Managed;
-import ch.almana.android.billing.backend.PurchaseListener;
-import ch.almana.android.billing.products.BuyMeABeerProductsInitialiser;
+import ch.almana.android.billing.BillingManager.Managed;
+import ch.almana.android.billing.PurchaseListener;
 import ch.almana.android.billing.products.Product;
 import ch.almana.android.billing.products.ProductList;
 import ch.bedesign.android.law.R;
