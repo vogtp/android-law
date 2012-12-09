@@ -33,8 +33,8 @@ public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements Pu
 			return;
 		}
 		lawProductsList = new HashMap<String, LawModel>();
-		lawProductsList.put("law.VStrR", getLaw(ctx, LawCodes.VSTRR, "Verwaltungsstrafrecht", "VStrR", "http://www.admin.ch/ch/d/sr/313_0/"));
-		lawProductsList.put("law.StPO", getLaw(ctx, LawCodes.STPO, "Strafprozessordnung", "StPO", "http://www.admin.ch/ch/d/sr/312_0/"));
+		lawProductsList.put("law.vstrr", getLaw(ctx, LawCodes.VSTRR, "Verwaltungsstrafrecht", "VStrR", "http://www.admin.ch/ch/d/sr/313_0/"));
+		lawProductsList.put("law.stpo", getLaw(ctx, LawCodes.STPO, "Strafprozessordnung", "StPO", "http://www.admin.ch/ch/d/sr/312_0/"));
 		//	lawProductsList.put("law.", getLaw(ctx, LawCodes., "", "", ""));
 	}
 
