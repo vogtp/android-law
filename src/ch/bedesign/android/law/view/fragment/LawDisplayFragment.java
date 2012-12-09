@@ -67,7 +67,9 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		View v = inflater.inflate(R.layout.law_display_list, container, false);
 		pbWait = (DbUpdateProgressBar) v.findViewById(R.id.pbWait);
 		lawCrumbs = (LawCrumbs) v.findViewById(R.id.lawCrumbs);
-		//lawCrumbs.setVisibility(View.GONE);
+		if (!Logger.DEBUG) {
+			lawCrumbs.setVisibility(View.GONE);
+		}
 		return v;
 	}
 
