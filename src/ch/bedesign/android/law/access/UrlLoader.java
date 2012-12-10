@@ -25,11 +25,13 @@ public class UrlLoader {
 
 	//FIXME remove
 	public boolean useUrlConnection = false;
+	private final String lawCode;
 
 
-	public UrlLoader(Context context) {
+	public UrlLoader(Context context, String lawCode) {
 		super();
 		this.context = context;
+		this.lawCode = lawCode;
 	}
 
 	public InputStream getLawStream(String urlStr) throws IOException {
@@ -89,7 +91,7 @@ public class UrlLoader {
 
 	private File getCacheFile(String urlStr) {
 		File cacheDir = context.getCacheDir();
-		return new File(cacheDir, Integer.toString(urlStr.hashCode()));
+		return new File(cacheDir, lawCode + "_" + Integer.toString(urlStr.hashCode()));
 	}
 
 	private boolean cacheExists(String urlStr) {

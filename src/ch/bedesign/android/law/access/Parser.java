@@ -28,7 +28,7 @@ public class Parser {
 		this.resolver = ctx.getContentResolver();
 		this.lawId = law.getId();
 		this.law = law;
-		urlLoader = new UrlLoader(ctx);
+		urlLoader = new UrlLoader(ctx, law.getCode());
 	}
 
 	private Document getDocument(String urlText) throws IOException {
