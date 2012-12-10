@@ -41,7 +41,7 @@ public class LawUpdater extends AsyncTask<Long, Object, Object> {
 					c = resolver.query(Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID, new String[] { Long.toString(lawId) },
 							Laws.SORTORDER_DEFAULT);
 					if (c != null && c.moveToFirst()) {
-						updateLaw(resolver, c);
+						updateLaw(ctx, resolver, c);
 					}
 				} catch (Exception e) {
 					Logger.w("Cannot update law", e);
@@ -55,9 +55,9 @@ public class LawUpdater extends AsyncTask<Long, Object, Object> {
 		return null;
 	}
 
-	private void updateLaw(ContentResolver resolver, Cursor c) throws ClientProtocolException, IOException {
+	private void updateLaw(Context ctx, ContentResolver resolver, Cursor c) throws ClientProtocolException, IOException {
 		LawModel law = new LawModel(c);
-		Parser parser = new Parser(resolver, law);
+		Parser parser = new Parser(ctx, law);
 		String lawVersion = parser.getLawVersion();
 		long now = System.currentTimeMillis();
 		try {

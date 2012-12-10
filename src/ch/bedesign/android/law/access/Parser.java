@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.net.Uri;
 import ch.bedesign.android.law.db.DB.Entries;
 import ch.bedesign.android.law.log.Logger;
@@ -20,12 +21,18 @@ public class Parser {
 	private final ContentResolver resolver;
 	private final long lawId;
 	private final LawModel law;
+	private final UrlLoader urlLoader;
 
-	public Parser(ContentResolver resolver, LawModel law) {
+	public Parser(Context ctx, LawModel law) {
 		super();
-		this.resolver = resolver;
+		this.resolver = ctx.getContentResolver();
 		this.lawId = law.getId();
 		this.law = law;
+		urlLoader = new UrlLoader(ctx);
+	}
+
+	private Document getDocument(String urlText) throws IOException {
+		return Jsoup.parse(urlLoader.getFile(urlText), null, urlText);
 	}
 
 	private long insert(EntriesModel entriesModel) {
@@ -37,7 +44,7 @@ public class Parser {
 		String urlText = law.getUrl();
 		Logger.i("Parse law from " + urlText);
 		// Entries Model (ID (auto increment), Gesetz ID, Parent Id, url, Name , Kurztext, Fullname, Text(Artikel selbst), sequence (long))
-		Document doc = Jsoup.connect(urlText).timeout(10000).get();
+		Document doc = getDocument(urlText);
 		Elements links = doc.select("A[NAME]");
 		long parentIdFirstLevel = -1;
 
@@ -102,7 +109,7 @@ public class Parser {
 					em.setShortName("");
 					em.setFullName(law.getShortName());
 					long parentIdSecondLevel = insert(em);
-					Document subdoc = Jsoup.connect(link.attr("abs:href")).timeout(10000).get();
+					Document subdoc = getDocument(link.attr("abs:href"));
 					Elements subLinks = subdoc.select("A[Name]");
 					long parentIdThirdLevel = parentIdSecondLevel;
 					subLevel1 = parentIdSecondLevel;
@@ -175,7 +182,7 @@ public class Parser {
 	public EntriesModel parseArticleText(String urlText, long parentId) throws IOException {
 		Logger.v("Parse law from " + urlText);
 		EntriesModel entrie = null;
-			Document doc = Jsoup.connect(urlText).timeout(10000).get();
+		Document doc = getDocument(urlText);
 			Elements artikels = doc.select("div[id$=spalteContentPlus]");
 			for (Element artikel : artikels) {
 				String name = artikel.select("h5").text();
@@ -194,7 +201,7 @@ public class Parser {
 		String urlText = law.getUrl();
 		String lawVersion = null;
 		try {
-			Document doc = Jsoup.connect(urlText).timeout(10000).get();
+			Document doc = getDocument(urlText);
 			Elements Versions = doc.select("div[class$=Stand]");
 			for (Element Version : Versions) {
 				Elements vs = Version.select("i");
