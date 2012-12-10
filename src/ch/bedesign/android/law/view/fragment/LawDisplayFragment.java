@@ -114,8 +114,14 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 		};
 		adapter.setViewBinder(binder);
 		setListAdapter(adapter);
-		getLoaderManager().initLoader(LOADER_ENTRIES_LIST, null, this);
+		//		getLoaderManager().initLoader(LOADER_ENTRIES_LIST, null, this);
 		pbWait.listenForChange(law.getId());
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		getLoaderManager().initLoader(LOADER_ENTRIES_LIST, null, this);
 	}
 
 	@Override

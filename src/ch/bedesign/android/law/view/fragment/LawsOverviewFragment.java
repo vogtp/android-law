@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -42,7 +44,13 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
 		setListShown(false);
-		getLoaderManager().initLoader(0, null, this);
+		getListView().setDivider(new ColorDrawable(getResources().getColor(R.color.lawRed)));
+		//		getListView().setDivider(getResources().getDrawable(R.drawable.divider_shape));
+		//		int[] colors = { 380003, getResources().getColor(R.color.lawRed), 380003 }; // red for the example
+		//		GradientDrawable divider = new GradientDrawable(Orientation.LEFT_RIGHT, colors);
+		//		getListView().setDivider(divider);
+		getListView().setDividerHeight(1);
+		getListView().setBackgroundColor(Color.BLACK);
 
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_overview_list_item, null,
 				new String[] { DB.Laws.NAME_NAME, DB.Laws.NAME_VERSION },
@@ -66,6 +74,13 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		});
 		setListAdapter(adapter);
 		getListView().setOnCreateContextMenuListener(this);
+		//		getLoaderManager().initLoader(0, null, this);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override

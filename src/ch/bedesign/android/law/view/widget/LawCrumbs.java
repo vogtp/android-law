@@ -14,6 +14,7 @@ import android.widget.TextView;
 import ch.almana.android.util.StringUtils;
 import ch.bedesign.android.law.db.DB;
 import ch.bedesign.android.law.db.DB.Entries;
+import ch.bedesign.android.law.db.DB.Laws;
 import ch.bedesign.android.law.model.EntriesModel;
 
 public class LawCrumbs extends LinearLayout {
@@ -41,34 +42,33 @@ public class LawCrumbs extends LinearLayout {
 		Cursor cursorLaw = null;
 		sbTemp = new StringBuilder();
 		removeAllViews();
-		int i = 0;
+		//		int i = 0;
 		try {
 			cursorEntity = clEntity.loadInBackground();
 
 			if (cursorEntity.moveToFirst()) {
 				long pid = cursorEntity.getLong(Entries.INDEX_PARENT_ID);
 				EntriesModel em = new EntriesModel(cursorEntity);
-				//				if (pid < 0) {
-				//					// get law and return
-				//					long lawId = cursorEntity.getLong(Entries.INDEX_LAW_ID);
-				//					CursorLoader clLaw = new CursorLoader(getContext(), Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID,
-				//							new String[] { Long.toString(lawId) }, Laws.SORTORDER_DEFAULT);
-				//					cursorLaw = clLaw.loadInBackground();
-				//					if (cursorLaw.moveToFirst()) {
-				//						sbTemp.append(" ").append(cursorLaw.getString(Laws.INDEX_SHORT_NAME));
-				//						addView(getShortTextView(sbTemp.toString()));
-				//						//						addView(getShortTextView(cursorLaw.getString(Laws.INDEX_SHORT_NAME)), i++);
-				//						return;
-				//					}
-				//				} else {
-				String sn = cursorEntity.getString(Entries.INDEX_SHORT_NAME);
-				if (StringUtils.isEmpty(sn)) {
-					sn = cursorEntity.getString(Entries.INDEX_NAME);
+				if (pid < 0) {
+					// get law and return
+					long lawId = cursorEntity.getLong(Entries.INDEX_LAW_ID);
+					CursorLoader clLaw = new CursorLoader(getContext(), Laws.CONTENT_URI, Laws.PROJECTION_DEFAULT, DB.SELECTION_BY_ID,
+							new String[] { Long.toString(lawId) }, Laws.SORTORDER_DEFAULT);
+					cursorLaw = clLaw.loadInBackground();
+					if (cursorLaw.moveToFirst()) {
+						sbTemp.append(" ").append(cursorLaw.getString(Laws.INDEX_SHORT_NAME));
+						//						addView(getShortTextView(sbTemp.toString()));
+						//						addView(getShortTextView(cursorLaw.getString(Laws.INDEX_SHORT_NAME)), i++);
+					}
+				} else {
+					String sn = cursorEntity.getString(Entries.INDEX_SHORT_NAME);
+					if (StringUtils.isEmpty(sn)) {
+						sn = cursorEntity.getString(Entries.INDEX_NAME);
+					}
+					sbTemp.append(" ").append(sn);
+					//					addView(getShortTextView(cursorEntity.getString(Entries.INDEX_SHORT_NAME)), i++);
+					setEntityId(pid);
 				}
-				sbTemp.append(" ").append(sn);
-				//					addView(getShortTextView(cursorEntity.getString(Entries.INDEX_SHORT_NAME)), i++);
-				setEntityId(pid);
-				//				}
 			}
 			addView(getShortTextView(sbTemp.toString()));
 		} finally {
