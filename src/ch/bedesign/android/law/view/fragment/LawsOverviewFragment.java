@@ -44,6 +44,13 @@ public class LawsOverviewFragment extends ListFragment implements ILawFragment, 
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
 		setListShown(false);
+		getListView().setDivider(new ColorDrawable(getResources().getColor(R.color.lawRed)));
+		//		getListView().setDivider(getResources().getDrawable(R.drawable.divider_shape));
+		//		int[] colors = { 380003, getResources().getColor(R.color.lawRed), 380003 }; // red for the example
+		//		GradientDrawable divider = new GradientDrawable(Orientation.LEFT_RIGHT, colors);
+		//		getListView().setDivider(divider);
+		getListView().setDividerHeight(1);
+		getListView().setBackgroundColor(Color.BLACK);
 
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.law_overview_list_item, null,
 				new String[] { DB.Laws.NAME_NAME, DB.Laws.NAME_VERSION },
