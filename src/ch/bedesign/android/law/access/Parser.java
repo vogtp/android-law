@@ -37,7 +37,6 @@ public class Parser {
 		String urlText = law.getUrl();
 		Logger.i("Parse law from " + urlText);
 		// Entries Model (ID (auto increment), Gesetz ID, Parent Id, url, Name , Kurztext, Fullname, Text(Artikel selbst), sequence (long))
-		try {
 			Document doc = Jsoup.connect(urlText).timeout(10000).get();
 			Elements links = doc.select("A[NAME]");
 			long parentIdFirstLevel = -1;
@@ -173,19 +172,12 @@ public class Parser {
 
 				}
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Logger.w("Can not parse site", e);
-		}
-		//timingLogger.addSplit("parse");
-		//timingLogger.dumpToLog();
+
 	}
 
 	public EntriesModel parseArticleText(String urlText, long parentId) throws IOException {
 		Logger.v("Parse law from " + urlText);
 		EntriesModel entrie = null;
-		try {
 			Document doc = Jsoup.connect(urlText).timeout(10000).get();
 			Elements artikels = doc.select("div[id$=spalteContentPlus]");
 			for (Element artikel : artikels) {
@@ -198,14 +190,6 @@ public class Parser {
 				text = text.substring(8);
 				entrie = new EntriesModel(lawId, parentId, "", name, "", "", text, 0);
 			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Logger.w("Can not parse site", e);
-		}
-		//timingLogger.addSplit("parse");
-		//timingLogger.dumpToLog();
 		return entrie;
 	}
 
