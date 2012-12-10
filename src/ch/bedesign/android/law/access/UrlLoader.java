@@ -52,6 +52,7 @@ public class UrlLoader {
 	}
 
 	private void cacheStream(String urlStr) {
+		Logger.w("Loading from internet: " + urlStr);
 		InputStream stream;
 		FileOutputStream out = null;
 		try {

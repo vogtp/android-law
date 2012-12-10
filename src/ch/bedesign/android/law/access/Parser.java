@@ -32,6 +32,7 @@ public class Parser {
 	}
 
 	private Document getDocument(String urlText) throws IOException {
+		Logger.i("Parsing: " + urlText);
 		return Jsoup.parse(urlLoader.getFile(urlText), null, urlText);
 	}
 
