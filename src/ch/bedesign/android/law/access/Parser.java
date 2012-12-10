@@ -143,6 +143,7 @@ public class Parser {
 									emThirdLevel.setName(name);
 									emThirdLevel.setShortName(subLink.select("B").text());
 									emThirdLevel.setFullName(law.getShortName() + "/" + link.text());
+									emThirdLevel.setText(link.text());
 									long parentIdFourthLevel = insert(emThirdLevel);
 									EntriesModel entrie = parseArticleText(subLink.attr("abs:href"), parentIdFourthLevel);
 									if (entrie != null) {
@@ -160,6 +161,7 @@ public class Parser {
 						em.setName(name);
 						em.setShortName(link.select("B").text());
 						em.setFullName(law.getShortName());
+						em.setText(link.text());
 						long ParentIdSecondLevel = insert(em);
 						EntriesModel entrie = parseArticleText(link.attr("abs:href"), ParentIdSecondLevel);
 						if (entrie != null) {
