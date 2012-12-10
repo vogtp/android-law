@@ -169,27 +169,26 @@ public class Parser {
 						insert(entrie);
 					}
 				}
-
 			}
 		}
+
 	}
 
 	public EntriesModel parseArticleText(String urlText, long parentId) throws IOException {
 		Logger.v("Parse law from " + urlText);
 		EntriesModel entrie = null;
-		Document doc = Jsoup.connect(urlText).timeout(10000).get();
-		Elements artikels = doc.select("div[id$=spalteContentPlus]");
-		for (Element artikel : artikels) {
-			String name = artikel.select("h5").text();
-			String text = "";
-			Elements arts = artikel.select("p");
-			for (Element art : arts) {
-				text = text + "<br><br>" + art.html();
+			Document doc = Jsoup.connect(urlText).timeout(10000).get();
+			Elements artikels = doc.select("div[id$=spalteContentPlus]");
+			for (Element artikel : artikels) {
+				String name = artikel.select("h5").text();
+				String text = "";
+				Elements arts = artikel.select("p");
+				for (Element art : arts) {
+					text = text + "<br><br>" + art.html();
+				}
+				text = text.substring(8);
+				entrie = new EntriesModel(lawId, parentId, "", name, "", "", text, 0);
 			}
-			text = text.substring(8);
-			entrie = new EntriesModel(lawId, parentId, "", name, "", "", text, 0);
-		}
-
 		return entrie;
 	}
 
