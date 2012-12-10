@@ -32,10 +32,10 @@ public class PaidLawProducts extends BuyMeABeerProductsInitialiser implements Pu
 			return;
 		}
 		lawProductsList = new HashMap<String, LawModel>();
-		lawProductsList.put("law.VStrR", getLaw(ctx, LawCodes.VSTRR, "Verwaltungsstrafrecht", "VStrR", "http://www.admin.ch/ch/d/sr/313_0/"));
-		lawProductsList.put("law.StPO", getLaw(ctx, LawCodes.STPO, "Strafprozessordnung", "StPO", "http://www.admin.ch/ch/d/sr/312_0/"));
-		lawProductsList.put("law.ZPO", getLaw(ctx, LawCodes.ZPO, "Zivilprozessordnung", "ZPO", "http://www.admin.ch/ch/d/sr/272/"));
-		lawProductsList.put("law.URG", getLaw(ctx, LawCodes.URG, "Urheberrecht", "URG", "http://www.admin.ch/ch/d/sr/231_1/"));
+		lawProductsList.put("law.vstrr", getLaw(ctx, LawCodes.VSTRR, "Verwaltungsstrafrecht", "VStrR", "http://www.admin.ch/ch/d/sr/313_0/"));
+		lawProductsList.put("law.stpo", getLaw(ctx, LawCodes.STPO, "Strafprozessordnung", "StPO", "http://www.admin.ch/ch/d/sr/312_0/"));
+		lawProductsList.put("law.zpo", getLaw(ctx, LawCodes.ZPO, "Zivilprozessordnung", "ZPO", "http://www.admin.ch/ch/d/sr/272/"));
+		lawProductsList.put("law.urg", getLaw(ctx, LawCodes.URG, "Urheberrecht", "URG", "http://www.admin.ch/ch/d/sr/231_1/"));
 		//	lawProductsList.put("law.", getLaw(ctx, LawCodes., "", "", ""));
 	}
 

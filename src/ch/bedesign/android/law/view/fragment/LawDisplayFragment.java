@@ -104,7 +104,6 @@ public class LawDisplayFragment extends ListFragment implements ILawFragment, Lo
 						if (string != null) {
 							TextView tvName = (TextView) view;
 							tvName.setText(cursor.getString(DB.Entries.INDEX_SHORT_NAME) + " " + string);
-							TextView tvText = (TextView) ((View) view.getParent()).findViewById(R.id.tvLawText);
 							return true;
 						}
 					}

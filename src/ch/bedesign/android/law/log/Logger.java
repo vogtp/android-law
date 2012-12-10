@@ -16,7 +16,7 @@ public class Logger {
 	public final static String TAG = "swissLaw";
 	private static final String STACKTRACE_TAG = TAG + "StracktraceLog";
 
-	public final static boolean DEBUG = true;
+	public final static boolean DEBUG = false;
 
 
 	public static void e(String msg, Throwable t) {
