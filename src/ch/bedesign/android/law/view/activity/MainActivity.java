@@ -203,6 +203,7 @@ public class MainActivity extends FragmentActivity {
 		outState.putInt(STATE_CURRENT_ITEM, viewPager.getCurrentItem());
 		int count = sectionsPagerAdapter.getCount();
 		outState.putInt(STATE_FRAG_COUNT, count);
+		sectionsPagerAdapter.onSaveInstanceState(outState);
 		for (int i = 1; i < count; i++) {
 			Bundle b = new Bundle();
 			Fragment fragment = sectionsPagerAdapter.getItem(i);
@@ -234,6 +235,7 @@ public class MainActivity extends FragmentActivity {
 				sectionsPagerAdapter.addFragment(f, getString(R.string.title_search) + " " + sq);
 			}
 		}
+		sectionsPagerAdapter.onRestoreInstanceState(bundle);
 		viewPager.setCurrentItem(bundle.getInt(STATE_CURRENT_ITEM));
 		viewPager.getAdapter().notifyDataSetChanged();
 		pagerTabStrip.setTextSpacing(pagerTabStrip.getTextSpacing());

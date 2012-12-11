@@ -16,6 +16,7 @@ import ch.bedesign.android.law.view.fragment.LawsOverviewFragment;
 
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
+	private static final String STATE_NAMES = "STATE_NAMES";
 	private final LinkedList<Fragment> pages = new LinkedList<Fragment>();
 	private final LinkedList<String> names = new LinkedList<String>();
 	private final ViewPager viewPager;
@@ -64,8 +65,6 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		notifyDataSetChanged();
 	}
 
-
-
 	public boolean onBackPressed() {
 		ILawFragment fragment = (ILawFragment) getCurrentFragment();
 		if (fragment != null) {
@@ -100,6 +99,20 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public int getItemPosition(Object object) {
 		return POSITION_NONE;
+	}
+
+	public void onRestoreInstanceState(Bundle bundle) {
+		String[] strings = bundle.getStringArray(STATE_NAMES);
+		names.clear();
+		for (int i = 0; i < strings.length; i++) {
+			names.add(strings[i]);
+		}
+	}
+
+	public void onSaveInstanceState(Bundle outState) {
+		String[] values = new String[names.size()];
+		values = names.toArray(values);
+		outState.putStringArray(STATE_NAMES, values);
 	}
 
 }
