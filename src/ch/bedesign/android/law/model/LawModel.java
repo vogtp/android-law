@@ -23,6 +23,7 @@ public class LawModel implements Parcelable {
 	private long isUpdating = -1;
 
 
+
 	public LawModel(String code, String name, String shortName, long countryId, String version, String url, long lastCheck) {
 		super();
 		this.code = code;

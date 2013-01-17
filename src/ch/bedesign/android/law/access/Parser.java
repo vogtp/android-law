@@ -1,6 +1,7 @@
 package ch.bedesign.android.law.access;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,6 +13,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.net.Uri;
 import ch.bedesign.android.law.db.DB.Entries;
+import ch.bedesign.android.law.helper.SettingsLaw;
 import ch.bedesign.android.law.log.Logger;
 import ch.bedesign.android.law.model.EntriesModel;
 import ch.bedesign.android.law.model.LawModel;
@@ -22,17 +24,23 @@ public class Parser {
 	private final long lawId;
 	private final LawModel law;
 	private final UrlLoader urlLoader;
+	private final String lang;
+	private final String basicUrl;
+	private String langPartUrl;
 
 	public Parser(Context ctx, LawModel law) {
 		super();
 		this.resolver = ctx.getContentResolver();
 		this.lawId = law.getId();
 		this.law = law;
+		this.lang = new SettingsLaw(ctx).getLanguage();
+		this.basicUrl = "http://www.admin.ch/ch/";
+		this.langPartUrl = "d/sr";
 		urlLoader = new UrlLoader(ctx, law.getCode());
 	}
 
 	private Document getDocument(String urlText) throws IOException {
-		Logger.i("Parsing: " + urlText);
+		Logger.i("Parsing Document: " + urlText);
 		return Jsoup.parse(urlLoader.getFile(urlText), null, urlText);
 	}
 
@@ -41,8 +49,37 @@ public class Parser {
 		return ContentUris.parseId(uri);
 	}
 
-	public void parse() throws IOException {
+	private String getUrlText() {
 		String urlText = law.getUrl();
+		Locale langLocale = Locale.getDefault();
+		String systemLang = langLocale.getLanguage();
+		String userLang = "";
+
+		if (systemLang == lang) {
+			userLang = lang;
+		} else {
+			if (systemLang.contains("de") || systemLang == "it" || systemLang == "fr") {
+				userLang = systemLang;
+			} else {
+				userLang = lang;
+			}
+		}
+
+		if (userLang.contains("de")) {
+			langPartUrl = "d/sr";
+		} else if (userLang.contains("fr")) {
+			langPartUrl = "f/rs";
+		} else if (userLang.contains("it")) {
+			langPartUrl = "i/rs";
+		}
+
+		String urlTextnew = basicUrl + langPartUrl + urlText;
+
+		return urlTextnew;
+	}
+
+	public void parse() throws IOException {
+		String urlText = getUrlText();
 		Logger.i("Parse law from " + urlText);
 		// Entries Model (ID (auto increment), Gesetz ID, Parent Id, url, Name , Kurztext, Fullname, Text(Artikel selbst), sequence (long))
 		Document doc = getDocument(urlText);
@@ -188,18 +225,28 @@ public class Parser {
 			for (Element artikel : artikels) {
 				String name = artikel.select("h5").text();
 				String text = "";
-				Elements arts = artikel.select("p");
-				for (Element art : arts) {
-					text = text + "<br><br>" + art.html();
-				}
-				text = text.substring(8);
+			//Elements arts = artikel.select("p");
+			//for (Element art : arts) {
+			//text = text + "<br><br>" + art.html();
+			//}
+			//text = text.substring(8);
+			text = artikel.html();
+			int posStart = text.indexOf("</h5>");
+			text = text.substring(posStart + 5, text.length() - 6);
+			text = text.replaceAll("<dl compact='compact'>", "");
+			text = text.replaceAll("</dl>", "");
+			text = text.replaceAll("</dt>", "");
+			text = text.replaceAll("<dt>", "");
+			text = text.replaceAll("<dd>", "");
+			text = text.replaceAll("</dd>", "<br><br>");
+
 				entrie = new EntriesModel(lawId, parentId, "", name, "", "", text, 0);
 			}
 		return entrie;
 	}
 
 	public String getLawVersion() {
-		String urlText = law.getUrl();
+		String urlText = getUrlText();
 		String lawVersion = null;
 		try {
 			Document doc = getDocument(urlText);

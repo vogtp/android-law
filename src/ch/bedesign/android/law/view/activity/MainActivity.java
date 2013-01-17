@@ -123,7 +123,7 @@ public class MainActivity extends FragmentActivity {
 			PaidLawProducts lawProducts = new PaidLawProducts(this);
 			lawProducts.loadProductsIfNotLoaded(getApplicationContext());
 			ProductManager productManager = ProductManager.getInstance(this);
-			productManager.addPurchaseListener(lawProducts);
+			//productManager.addPurchaseListener(lawProducts);
 			startActivity(BillingProductListActiviy.getIntent(this, LawBillingProductListActiviy.class, getString(R.string.menuAddLaw),
 					PaidLawProducts.PRODUCTS_LIST_LAWS));
 			return true;

@@ -20,6 +20,7 @@ public class SettingsLaw {
 	private static SettingsLaw instance = null;
 	private final Context ctx;
 
+
 	/**
 	 * Get the singleton instance
 	 * 
@@ -45,7 +46,7 @@ public class SettingsLaw {
 	}
 
 	// hide constructor use getinstance
-	private SettingsLaw(Context context) {
+	public SettingsLaw(Context context) {
 		super();
 		this.ctx = context.getApplicationContext();
 	}

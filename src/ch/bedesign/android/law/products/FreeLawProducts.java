@@ -18,11 +18,11 @@ public class FreeLawProducts {
 	 */
 	public static final void initDb(Context ctx) {
 		// free laws:
-		insertLawIfNotExists(ctx, LawCodes.EMRK, "Menschenrechte", "EMRK", "http://www.admin.ch/ch/d/sr/0_101/");
-		insertLawIfNotExists(ctx, LawCodes.VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "BV", "http://www.admin.ch/ch/d/sr/101/");
-		insertLawIfNotExists(ctx, LawCodes.OR, "Obligationenrecht", "OR", "http://www.admin.ch/ch/d/sr/220/");
-		insertLawIfNotExists(ctx, LawCodes.ZGB, "Schweizerisches Zivilgesetzbuch", "ZGB", "http://www.admin.ch/ch/d/sr/210/");
-		insertLawIfNotExists(ctx, LawCodes.STGB, "Schweizerisches Strafgesetzbuch", "StGB", "http://www.admin.ch/ch/d/sr/311_0/");
+		insertLawIfNotExists(ctx, LawCodes.EMRK, "Menschenrechte", "EMRK", "/0_101/");
+		insertLawIfNotExists(ctx, LawCodes.VERFASSUNG, "Bundesverfassung  der Schweizerischen Eidgenossenschaft", "BV", "/101/");
+		insertLawIfNotExists(ctx, LawCodes.OR, "Obligationenrecht", "OR", "/220/");
+		insertLawIfNotExists(ctx, LawCodes.ZGB, "Schweizerisches Zivilgesetzbuch", "ZGB", "/210/");
+		insertLawIfNotExists(ctx, LawCodes.STGB, "Schweizerisches Strafgesetzbuch", "StGB", "/311_0/");
 
 	}
 
